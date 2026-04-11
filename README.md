@@ -1,209 +1,163 @@
-
-ProofStell Backend API 🖥 
-
-Decentralized Document Verification & Credential Registry on Stellar Soroban
-
-ProofStell is a decentralized platform built on Soroban smart contracts that allows institutions, organizations, and individuals to issue, verify, and manage tamper-proof digital credentials and documents.
-
-Instead of trusting centralized databases, ProofDesk anchors cryptographic proofs of documents on-chain, ensuring authenticity, permanence, and global verifiability.
-
-From academic certificates to employment records and compliance documents, ProofDesk creates a trustless verification infrastructure powered by Stellar User interface for the ProofStell decentralized document verification platform.
-
-🚀 Key Features 📄 On-Chain Document Proofs
-
-Institutions can register documents by storing cryptographic hashes on-chain via Soroban smart contracts.
-
-Anyone can verify a document’s authenticity by comparing its hash with the blockchain record.
-
-🏫 Institutional Issuers
-
-Verified institutions (schools, companies, NGOs) can issue credentials directly to users’ wallets.
-
-Examples:
-
-University certificates
-
-Employment letters
-
-Training certifications
-
-Compliance approvals
-
-🔐 Wallet-Based Identity
-
-Users connect their Stellar wallets to:
-
-Receive credentials
-
-Share verifiable proofs
-
-Manage issued documents
-
-No usernames or passwords required.
-
-🔎 Instant Verification
-
-Third parties can verify documents in seconds:
-
-Upload the document
-
-Platform hashes the file
-
-Hash is matched with the blockchain record
-
-Result: Valid / Not Found / Revoked
-
-🧾 Revocation Registry
-
-Issuers can revoke credentials if necessary.
-
-Example cases:
-
-Fraudulent certificates
-
-Expired compliance documents
-
-Recalled licenses
-
-The revocation state is stored on-chain for full transparency.
-
-The frontend enables users, institutions, and third parties to interact with the ProofStell ecosystem.
-
-Users can:
-
-• Upload documents • Verify document authenticity • View issued credentials • Connect Stellar wallets
-
-Overview
-
-ProofStell allows anyone to verify documents in seconds.
+# 🖥️ ProofStell Backend API
 
 Backend services for the ProofStell decentralized document verification platform.
 
-The backend acts as the middleware between the frontend application and the Soroban smart contracts deployed on the Stellar network.
+---
+
+## 🌍 Overview
+
+The backend acts as a bridge between the frontend and the Stellar blockchain.
 
 It handles:
 
-• Document hashing
-• Issuer verification
-• Metadata storage
-• Smart contract interaction
-• API services for the frontend
+* Document hashing
+* Smart contract interaction
+* Metadata storage
+* Verification logic
 
-Architecture
+---
 
+## 🚀 Core Features
+
+### 📄 Document Processing
+
+* Generate SHA256 hashes from uploaded documents
+* Ensure consistent hashing for verification
+
+---
+
+### 🔗 Blockchain Interaction
+
+* Communicate with Soroban smart contracts
+* Register and verify document hashes
+
+---
+
+### 🗄️ Metadata Storage
+
+* Store document metadata in PostgreSQL
+* Track issuers, timestamps, and ownership
+
+---
+
+### 🔎 Verification Service
+
+* Accept document uploads
+* Return verification results:
+
+  * Verified
+  * Not Found
+  * Revoked
+
+---
+
+## 🏗️ Architecture
+
+```
 Frontend (Next.js)
-|
-v
+        ↓
 Backend API (NestJS)
-|
-v
+        ↓
 Soroban Smart Contract
-|
-v
+        ↓
 Stellar Network
+```
 
-Core Responsibilities
+---
 
-Document Processing
-Handles document uploads and generates SHA256 hashes.
+## 🛠️ Tech Stack
 
-Blockchain Interaction
-Calls Soroban contract functions.
+* NestJS
+* PostgreSQL
+* Prisma ORM
+* Stellar SDK
+* Multer (file handling)
+* Crypto (SHA256 hashing)
 
-Metadata Storage
-Stores document metadata in PostgreSQL.
+---
 
-Verification Services
-Allows third parties to verify documents.
+## 📁 Project Structure
 
-Technology Stack
+```bash
+src/
+├── documents/
+├── issuers/
+├── verification/
+├── soroban/
+├── prisma/
+└── utils/
+```
 
-Framework
-NestJS
+---
 
-Database
-PostgreSQL
+## 🔗 API Endpoints
 
-ORM
-Prisma
+### Issue Document
 
-Blockchain SDK
-Stellar Soroban SDK
-
-File Handling
-Multer
-
-Hashing
-Crypto SHA256
-
-Project Structure
-src
-│
-├── auth
-│
-├── documents
-│   ├── documents.controller.ts
-│   ├── documents.service.ts
-│   └── documents.module.ts
-│
-├── issuers
-│
-├── verification
-│
-├── soroban
-│   ├── soroban.service.ts
-│   └── contract-client.ts
-│
-├── prisma
-│
-└── utils
-API Endpoints
-
-Issue Document
-
+```http
 POST /documents/issue
+```
 
-Registers a document on-chain.
+---
 
-Request
+### Verify Document
 
-{
-  "issuerId": "org123",
-  "walletAddress": "GXXXXXX",
-  "documentHash": "abc123..."
-}
-
-Verify Document
-
+```http
 POST /verify
+```
 
-Uploads a document and checks if it exists on-chain.
+---
 
-Response
+### Revoke Document
 
-{
-  "status": "verified",
-  "issuer": "UniversityX",
-  "timestamp": "..."
-}
-
-Revoke Document
-
+```http
 POST /documents/revoke
+```
 
-Revokes an existing credential.
+---
 
-Running the Backend
+## 🚀 Getting Started
 
-Install dependencies
+### Install dependencies
 
+```bash
 npm install
+```
 
-Run development server
+### Run server
 
+```bash
 npm run start:dev
-Environment Variables
+```
+
+---
+
+## 🔐 Environment Variables
+
+```env
 DATABASE_URL=
 SOROBAN_RPC_URL=
 STELLAR_NETWORK=
 CONTRACT_ADDRESS=
+```
+
+---
+
+## 🔐 Security
+
+* Hash-based verification
+* Input validation
+* Issuer authorization
+* Secure blockchain interaction
+
+---
+
+## 🎯 Goals
+
+* Provide reliable verification services
+* Ensure accurate blockchain interaction
+* Maintain secure document processing
+
+---
+
+**ProofStell Backend — Powering decentralized verification.**
