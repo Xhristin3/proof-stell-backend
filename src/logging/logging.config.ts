@@ -1,14 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
+import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
-import { ClsService } from 'nestjs-cls';
+import type { ClsService } from 'nestjs-cls';
 
 // Sanitize sensitive data from logs
 const sensitiveFields = ['password', 'token', 'authorization', 'cookie'];
 const sanitize = winston.format((info) => {
   const newInfo = { ...info };
-  const body = newInfo.meta?.body || {};
+  const meta = newInfo.meta as Record<string, unknown> | undefined;
+  const body = meta?.body as Record<string, unknown> | undefined || {};
 
   for (const field of sensitiveFields) {
     if (body[field]) {
@@ -16,8 +17,8 @@ const sanitize = winston.format((info) => {
     }
   }
 
-  if (newInfo.meta) {
-    newInfo.meta.body = body;
+  if (meta) {
+    meta.body = body;
   }
   return newInfo;
 });
@@ -36,7 +37,7 @@ export const createWinstonLogger = (clsService: ClsService) => {
     return log;
   });
 
-  return WinstonModule.createLogger({
+  return {
     transports: [
       new winston.transports.Console({
         format: winston.format.combine(
@@ -48,7 +49,8 @@ export const createWinstonLogger = (clsService: ClsService) => {
           }),
         ),
       }),
-      new winston.transports.DailyRotateFile({
+       
+      new (require('winston-daily-rotate-file').DailyRotateFile)({
         filename: 'logs/application-%DATE%.log',
         datePattern: 'YYYY-MM-DD-HH',
         zippedArchive: true,
@@ -60,7 +62,8 @@ export const createWinstonLogger = (clsService: ClsService) => {
           logFormat,
         ),
       }),
-      new winston.transports.DailyRotateFile({
+       
+      new (require('winston-daily-rotate-file').DailyRotateFile)({
         filename: 'logs/errors-%DATE%.log',
         level: 'error',
         datePattern: 'YYYY-MM-DD-HH',
@@ -74,5 +77,5 @@ export const createWinstonLogger = (clsService: ClsService) => {
         ),
       }),
     ],
-  });
+  };
 };

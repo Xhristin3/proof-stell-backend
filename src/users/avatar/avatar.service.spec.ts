@@ -1,4 +1,3 @@
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -9,7 +8,6 @@ import * as sharp from 'sharp';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
-
 jest.mock('sharp', () => {
   const mSharp = {
     resize: jest.fn().mockReturnThis(),
@@ -19,10 +17,9 @@ jest.mock('sharp', () => {
   return jest.fn(() => mSharp);
 });
 
-
 jest.mock('fs/promises', () => ({
   mkdir: jest.fn().mockResolvedValue(undefined),
-  writeFile: jest.fn().mockResolvedValue(undefined), 
+  writeFile: jest.fn().mockResolvedValue(undefined),
 }));
 
 describe('AvatarService', () => {
@@ -35,7 +32,7 @@ describe('AvatarService', () => {
     username: 'testuser',
     email: 'test@example.com',
     avatarUrl: 'old-avatar.png',
-    save: jest.fn().mockResolvedValue(true), 
+    save: jest.fn().mockResolvedValue(true),
   };
 
   const mockFile: Express.Multer.File = {
@@ -45,7 +42,7 @@ describe('AvatarService', () => {
     mimetype: 'image/png',
     size: 100 * 1024,
     buffer: Buffer.from('dummy image data'),
-    stream: null, 
+    stream: null,
     destination: null,
     filename: null,
     path: null,
@@ -59,7 +56,6 @@ describe('AvatarService', () => {
           provide: getModelToken(User.name),
           useValue: {
             findById: jest.fn().mockResolvedValue(mockUser),
-            
           },
         },
       ],
@@ -68,9 +64,8 @@ describe('AvatarService', () => {
     service = module.get<AvatarService>(AvatarService);
     userModel = module.get<Model<UserDocument>>(getModelToken(User.name));
 
-    
     jest.clearAllMocks();
-    (sharp as jest.Mock).mockClear(); 
+    (sharp as jest.Mock).mockClear();
     (fs.mkdir as jest.Mock).mockClear();
     mockUser.save.mockClear();
   });
@@ -83,62 +78,75 @@ describe('AvatarService', () => {
     it('should successfully process and save the avatar', async () => {
       const result = await service.uploadAndSaveAvatar(mockUserId, mockFile);
 
-      
       expect(userModel.findById).toHaveBeenCalledWith(mockUserId);
 
-      
       expect(fs.mkdir).toHaveBeenCalledWith(
         expect.stringContaining(path.join(process.cwd(), 'public', 'avatars')),
-        { recursive: true }
+        { recursive: true },
       );
 
-      
       expect(sharp).toHaveBeenCalledWith(mockFile.buffer);
-      
-      expect((sharp as jest.Mock).mock.results[0].value.resize).toHaveBeenCalledWith(200, 200, expect.any(Object));
-      expect((sharp as jest.Mock).mock.results[0].value.webp).toHaveBeenCalledWith(expect.any(Object));
-      expect((sharp as jest.Mock).mock.results[0].value.toFile).toHaveBeenCalledWith(
-        expect.stringContaining(path.join(process.cwd(), 'public', 'avatars', `${mockUserId}-`)) 
+
+      expect(
+        (sharp as jest.Mock).mock.results[0].value.resize,
+      ).toHaveBeenCalledWith(200, 200, expect.any(Object));
+      expect(
+        (sharp as jest.Mock).mock.results[0].value.webp,
+      ).toHaveBeenCalledWith(expect.any(Object));
+      expect(
+        (sharp as jest.Mock).mock.results[0].value.toFile,
+      ).toHaveBeenCalledWith(
+        expect.stringContaining(
+          path.join(process.cwd(), 'public', 'avatars', `${mockUserId}-`),
+        ),
       );
 
-      
-      expect(mockUser.avatarUrl).toMatch(new RegExp(`^/avatars/${mockUserId}-.*\\.webp$`));
+      expect(mockUser.avatarUrl).toMatch(
+        new RegExp(`^/avatars/${mockUserId}-.*\\.webp$`),
+      );
       expect(mockUser.save).toHaveBeenCalled();
 
-      
       expect(result).toEqual({
         message: 'Avatar uploaded successfully',
-        avatarUrl: expect.stringMatching(new RegExp(`^/avatars/${mockUserId}-.*\\.webp$`)),
+        avatarUrl: expect.stringMatching(
+          new RegExp(`^/avatars/${mockUserId}-.*\\.webp$`),
+        ),
       });
     });
 
     it('should throw HttpException if user not found', async () => {
-      jest.spyOn(userModel, 'findById').mockResolvedValueOnce(null); 
+      jest.spyOn(userModel, 'findById').mockResolvedValueOnce(null);
 
-      await expect(service.uploadAndSaveAvatar(mockUserId, mockFile)).rejects.toThrow(
-        new HttpException('User not found', HttpStatus.NOT_FOUND)
+      await expect(
+        service.uploadAndSaveAvatar(mockUserId, mockFile),
+      ).rejects.toThrow(
+        new HttpException('User not found', HttpStatus.NOT_FOUND),
       );
 
       expect(userModel.findById).toHaveBeenCalledWith(mockUserId);
-      expect(fs.mkdir).not.toHaveBeenCalled(); 
-      expect(sharp).not.toHaveBeenCalled(); 
-      expect(mockUser.save).not.toHaveBeenCalled(); 
+      expect(fs.mkdir).not.toHaveBeenCalled();
+      expect(sharp).not.toHaveBeenCalled();
+      expect(mockUser.save).not.toHaveBeenCalled();
     });
 
     it('should throw HttpException if image processing fails', async () => {
-      
-      jest.spyOn((sharp as jest.Mock)().toFile, 'mockResolvedValue').mockRejectedValueOnce(
-        new Error('Sharp processing error')
-      );
+      jest
+        .spyOn((sharp as jest.Mock)().toFile, 'mockResolvedValue')
+        .mockRejectedValueOnce(new Error('Sharp processing error'));
 
-      await expect(service.uploadAndSaveAvatar(mockUserId, mockFile)).rejects.toThrow(
-        new HttpException('Failed to process image', HttpStatus.INTERNAL_SERVER_ERROR)
+      await expect(
+        service.uploadAndSaveAvatar(mockUserId, mockFile),
+      ).rejects.toThrow(
+        new HttpException(
+          'Failed to process image',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        ),
       );
 
       expect(userModel.findById).toHaveBeenCalledWith(mockUserId);
-      expect(fs.mkdir).toHaveBeenCalled(); 
+      expect(fs.mkdir).toHaveBeenCalled();
       expect(sharp).toHaveBeenCalledWith(mockFile.buffer);
-      expect(mockUser.save).not.toHaveBeenCalled(); 
+      expect(mockUser.save).not.toHaveBeenCalled();
     });
 
     it('should return default avatar URL', () => {

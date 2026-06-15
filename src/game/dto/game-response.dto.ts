@@ -3,44 +3,44 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class GameResponseDto {
   @ApiProperty({
     description: 'Game unique identifier',
-    example: '123e4567-e89b-12d3-a456-426614174000'
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
   id: string;
 
   @ApiProperty({
     description: 'User ID who played the game',
-    example: '123e4567-e89b-12d3-a456-426614174000'
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
   userId: string;
 
   @ApiProperty({
     description: 'Game score achieved',
-    example: 1500
+    example: 1500,
   })
   score: number;
 
   @ApiProperty({
     description: 'Maximum possible score for this game',
-    example: 2000
+    example: 2000,
   })
   maxPossibleScore: number;
 
   @ApiProperty({
     description: 'Game status',
     enum: ['IN_PROGRESS', 'COMPLETED', 'ABANDONED'],
-    example: 'COMPLETED'
+    example: 'COMPLETED',
   })
   status: string;
 
   @ApiProperty({
     description: 'Game duration in seconds',
-    example: 120
+    example: 120,
   })
   duration: number;
 
   @ApiProperty({
     description: 'Game level',
-    example: 5
+    example: 5,
   })
   level: number;
 
@@ -50,8 +50,8 @@ export class GameResponseDto {
       gameType: 'mole-hunt',
       difficulty: 'medium',
       achievements: ['first-catch', 'speed-demon'],
-      metadata: { level: 5, timeBonus: 200 }
-    }
+      metadata: { level: 5, timeBonus: 200 },
+    },
   })
   gameData?: {
     gameType?: string;
@@ -62,7 +62,7 @@ export class GameResponseDto {
 
   @ApiProperty({
     description: 'Game creation timestamp',
-    example: '2024-01-15T10:30:00Z'
+    example: '2024-01-15T10:30:00Z',
   })
   createdAt: Date;
 }
@@ -70,37 +70,37 @@ export class GameResponseDto {
 export class GameStatsDto {
   @ApiProperty({
     description: 'Total number of games played',
-    example: 25
+    example: 25,
   })
   totalGames: number;
 
   @ApiProperty({
     description: 'Highest score achieved',
-    example: 2500
+    example: 2500,
   })
   highestScore: number;
 
   @ApiProperty({
     description: 'Average score',
-    example: 1250.5
+    example: 1250.5,
   })
   averageScore: number;
 
   @ApiProperty({
     description: 'Total time played in seconds',
-    example: 3600
+    example: 3600,
   })
   totalTimePlayed: number;
 
   @ApiProperty({
     description: 'Number of completed games',
-    example: 20
+    example: 20,
   })
   completedGames: number;
 
   @ApiProperty({
     description: 'Win rate percentage',
-    example: 80.0
+    example: 80.0,
   })
   winRate: number;
 }

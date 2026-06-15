@@ -26,7 +26,9 @@ export class UserService {
       .createQueryBuilder('user')
       .select(['user.id', 'user.email', 'user.username'])
       .where('user.email = :email', { email: createUserDto.email })
-      .orWhere('user.username = :username', { username: createUserDto.username })
+      .orWhere('user.username = :username', {
+        username: createUserDto.username,
+      })
       .getOne();
 
     if (existingUser) {
@@ -50,7 +52,13 @@ export class UserService {
   async findAll(limit = 100, offset = 0): Promise<ReadUserDto[]> {
     const users = await this.userRepository
       .createQueryBuilder('user')
-      .select(['user.id', 'user.email', 'user.username', 'user.displayName', 'user.createdAt'])
+      .select([
+        'user.id',
+        'user.email',
+        'user.username',
+        'user.displayName',
+        'user.createdAt',
+      ])
       .orderBy('user.createdAt', 'DESC')
       .limit(limit)
       .offset(offset)
@@ -81,7 +89,13 @@ export class UserService {
     // Only select fields required for authentication to avoid loading large JSON fields
     return this.userRepository
       .createQueryBuilder('user')
-      .select(['user.id', 'user.email', 'user.password', 'user.isActive', 'user.isEmailVerified'])
+      .select([
+        'user.id',
+        'user.email',
+        'user.password',
+        'user.isActive',
+        'user.isEmailVerified',
+      ])
       .where('user.email = :email', { email })
       .getOne();
   }
@@ -123,7 +137,8 @@ export class UserService {
     // Check for email/username conflicts if they're being updated
     // Use safe 'in' checks because UpdateUserDto properties are optional/mapped types
     const hasEmail = 'email' in updateUserDto && (updateUserDto as any).email;
-    const hasUsername = 'username' in updateUserDto && (updateUserDto as any).username;
+    const hasUsername =
+      'username' in updateUserDto && (updateUserDto as any).username;
 
     if (hasEmail || hasUsername) {
       const whereConditions: any[] = [];
@@ -142,7 +157,10 @@ export class UserService {
         if (hasEmail && existingUser.email === (updateUserDto as any).email) {
           throw new ConflictException('Email already exists');
         }
-        if (hasUsername && existingUser.username === (updateUserDto as any).username) {
+        if (
+          hasUsername &&
+          existingUser.username === (updateUserDto as any).username
+        ) {
           throw new ConflictException('Username already exists');
         }
       }

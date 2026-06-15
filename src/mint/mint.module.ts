@@ -4,7 +4,7 @@ import { MintController } from './mint.controller';
 import { BlockchainModule } from 'src/blockchain/blockchain.module';
 
 @Module({
-  imports:[BlockchainModule],
+  imports: [BlockchainModule],
   controllers: [MintController],
   providers: [MintService],
 })

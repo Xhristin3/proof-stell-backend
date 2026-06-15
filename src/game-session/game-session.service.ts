@@ -108,7 +108,14 @@ export class GameSessionService {
     // Avoid eager loading of large relations by default. Load only summary fields for listing.
     const [sessions, total] = await this.gameSessionRepository
       .createQueryBuilder('gs')
-      .select(['gs.id', 'gs.userId', 'gs.challengeId', 'gs.score', 'gs.duration', 'gs.createdAt'])
+      .select([
+        'gs.id',
+        'gs.userId',
+        'gs.challengeId',
+        'gs.score',
+        'gs.duration',
+        'gs.createdAt',
+      ])
       .where('gs.userId = :userId', { userId })
       .orderBy('gs.createdAt', 'DESC')
       .limit(limit)

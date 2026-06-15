@@ -1,39 +1,47 @@
-import { IsEnum, IsString, IsNumber, IsOptional, IsArray, IsBoolean, IsObject } from "class-validator"
-import { ChallengeType, DifficultyLevel } from "../entities/challenge.entity"
+import {
+  IsEnum,
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  IsBoolean,
+  IsObject,
+} from 'class-validator';
+import { ChallengeType, DifficultyLevel } from '../entities/challenge.entity';
 
 export class CreateChallengeDto {
   @IsString()
-  title: string
+  title: string;
 
   @IsString()
-  description: string
+  description: string;
 
   @IsEnum(ChallengeType)
-  type: ChallengeType
+  type: ChallengeType;
 
   @IsEnum(DifficultyLevel)
-  difficulty: DifficultyLevel
+  difficulty: DifficultyLevel;
 
   @IsObject()
-  content: any
+  content: any;
 
   @IsObject()
   @IsOptional()
-  solution?: any
+  solution?: any;
 
   @IsNumber()
   @IsOptional()
-  basePoints?: number
+  basePoints?: number;
 
   @IsNumber()
   @IsOptional()
-  timeLimit?: number
+  timeLimit?: number;
 
   @IsArray()
   @IsOptional()
-  tags?: string[]
+  tags?: string[];
 
   @IsBoolean()
   @IsOptional()
-  isActive?: boolean
+  isActive?: boolean;
 }

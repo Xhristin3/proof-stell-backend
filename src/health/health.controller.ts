@@ -1,9 +1,13 @@
-import { Controller, Get } from "@nestjs/common"
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger"
-import { HealthCheck, type HealthCheckService, type TypeOrmHealthIndicator } from "@nestjs/terminus"
+import { Controller, Get } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  HealthCheck,
+  type HealthCheckService,
+  type TypeOrmHealthIndicator,
+} from '@nestjs/terminus';
 
-@ApiTags("Health")
-@Controller("health")
+@ApiTags('Health')
+@Controller('health')
 export class HealthController {
   constructor(
     private health: HealthCheckService,
@@ -12,35 +16,36 @@ export class HealthController {
 
   @Get()
   @ApiOperation({
-    summary: "Health check",
-    description: "Performs a comprehensive health check of the application and its dependencies",
+    summary: 'Health check',
+    description:
+      'Performs a comprehensive health check of the application and its dependencies',
   })
   @ApiResponse({
     status: 200,
-    description: "Application is healthy",
+    description: 'Application is healthy',
     schema: {
-      type: "object",
+      type: 'object',
       properties: {
-        status: { type: "string", example: "ok" },
+        status: { type: 'string', example: 'ok' },
         info: {
-          type: "object",
+          type: 'object',
           properties: {
             database: {
-              type: "object",
+              type: 'object',
               properties: {
-                status: { type: "string", example: "up" },
+                status: { type: 'string', example: 'up' },
               },
             },
           },
         },
-        error: { type: "object" },
+        error: { type: 'object' },
         details: {
-          type: "object",
+          type: 'object',
           properties: {
             database: {
-              type: "object",
+              type: 'object',
               properties: {
-                status: { type: "string", example: "up" },
+                status: { type: 'string', example: 'up' },
               },
             },
           },
@@ -50,10 +55,10 @@ export class HealthController {
   })
   @ApiResponse({
     status: 503,
-    description: "Application is unhealthy",
+    description: 'Application is unhealthy',
   })
   @HealthCheck()
   check() {
-    return this.health.check([() => this.db.pingCheck("database")])
+    return this.health.check([() => this.db.pingCheck('database')]);
   }
 }

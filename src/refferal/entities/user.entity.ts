@@ -1,55 +1,54 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, Index } from "typeorm"
-import { Referral } from "./referral.entity"
-import { Reward } from "./reward.entity"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  Index,
+} from 'typeorm';
+import { Referral } from './referral.entity';
+import { Reward } from './reward.entity';
 
-@Entity("users")
+@Entity('users')
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ unique: true })
-  email: string
+  email: string;
 
   @Column()
-  username: string
+  username: string;
 
   @Column()
-  password: string
+  password: string;
 
-  @Column({ unique: true, name: "referral_code" })
+  @Column({ unique: true, name: 'referral_code' })
   @Index()
-  referralCode: string
+  referralCode: string;
 
-  @Column({ name: "referred_by", nullable: true })
-  referredBy: string
+  @Column({ name: 'referred_by', nullable: true })
+  referredBy: string;
 
-  @Column({ name: "registration_completed", default: false })
-  registrationCompleted: boolean
+  @Column({ name: 'registration_completed', default: false })
+  registrationCompleted: boolean;
 
-  @Column({ name: "first_game_completed", default: false })
-  firstGameCompleted: boolean
+  @Column({ name: 'first_game_completed', default: false })
+  firstGameCompleted: boolean;
 
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
-  @OneToMany(
-    () => Referral,
-    (referral) => referral.referrer,
-  )
-  referralsMade: Referral[]
+  @OneToMany(() => Referral, (referral) => referral.referrer)
+  referralsMade: Referral[];
 
-  @OneToMany(
-    () => Referral,
-    (referral) => referral.referee,
-  )
-  referralsReceived: Referral[]
+  @OneToMany(() => Referral, (referral) => referral.referee)
+  referralsReceived: Referral[];
 
-  @OneToMany(
-    () => Reward,
-    (reward) => reward.user,
-  )
-  rewards: Reward[]
+  @OneToMany(() => Reward, (reward) => reward.user)
+  rewards: Reward[];
 }

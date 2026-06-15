@@ -49,7 +49,7 @@ describe('CacheController', () => {
   describe('deleteByKey', () => {
     it('should delete specific cache entry', async () => {
       const key = 'test-cache-key';
-      
+
       const result = await controller.deleteByKey(key);
 
       expect(mockCacheService.del).toHaveBeenCalledWith(key);
@@ -95,7 +95,7 @@ describe('CacheController', () => {
   describe('clearByPattern', () => {
     it('should clear all cache when pattern is *', async () => {
       const pattern = '*';
-      
+
       const result = await controller.clearByPattern(pattern);
 
       expect(mockCacheService.reset).toHaveBeenCalled();
@@ -108,7 +108,7 @@ describe('CacheController', () => {
 
     it('should clear all cache for any pattern (simplified implementation)', async () => {
       const pattern = 'leaderboard:*';
-      
+
       const result = await controller.clearByPattern(pattern);
 
       expect(mockCacheService.reset).toHaveBeenCalled();

@@ -6,4 +6,4 @@ export class GameStateChangeDto {
 
   @IsIn(['started', 'paused', 'ended'])
   state: 'started' | 'paused' | 'ended';
-} 
+}

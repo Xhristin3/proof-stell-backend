@@ -1,1 +1,1 @@
-export { LanguageValidationPipe } from "./language-validation.pipe"
+export { LanguageValidationPipe } from './language-validation.pipe';

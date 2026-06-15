@@ -39,7 +39,7 @@ async function bootstrap() {
     new HttpExceptionFilter(app.get(WINSTON_MODULE_NEST_PROVIDER)),
     new ThrottlerExceptionFilter(),
   );
-  
+
   // Global logging interceptor
   app.useGlobalInterceptors(loggingInterceptor);
 
@@ -60,7 +60,7 @@ async function bootstrap() {
           description: 'Enter JWT token',
           in: 'header',
         },
-        'JWT-auth', 
+        'JWT-auth',
       )
       .build();
 
@@ -68,10 +68,10 @@ async function bootstrap() {
     SwaggerModule.setup('api/docs', app, document, {
       swaggerOptions: {
         persistAuthorization: true,
+      },
     });
   }
 
-  
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   // Global prefix for all routes

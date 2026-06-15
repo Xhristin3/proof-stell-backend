@@ -1,17 +1,22 @@
-import { Injectable, type NestInterceptor, type ExecutionContext, type CallHandler } from "@nestjs/common"
-import type { Observable } from "rxjs"
-import { tap, catchError } from "rxjs/operators"
-import type { Reflector } from "@nestjs/core"
-import type { AuditLogService } from "../services/audit-log.service"
-import type { Request } from "express"
+import {
+  Injectable,
+  type NestInterceptor,
+  type ExecutionContext,
+  type CallHandler,
+} from '@nestjs/common';
+import type { Observable } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import type { Reflector } from '@nestjs/core';
+import type { AuditLogService } from '../services/audit-log.service';
+import type { Request } from 'express';
 
-export const AUDIT_LOG_KEY = "auditLog"
+export const AUDIT_LOG_KEY = 'auditLog';
 
 export interface AuditLogMetadata {
-  actionType: string
-  resource?: string
-  includeBody?: boolean
-  includeParams?: boolean
+  actionType: string;
+  resource?: string;
+  includeBody?: boolean;
+  includeParams?: boolean;
 }
 
 @Injectable()
@@ -22,37 +27,54 @@ export class AuditLogInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const auditMetadata = this.reflector.get<AuditLogMetadata>(AUDIT_LOG_KEY, context.getHandler())
+    const auditMetadata = this.reflector.get<AuditLogMetadata>(
+      AUDIT_LOG_KEY,
+      context.getHandler(),
+    );
 
     if (!auditMetadata) {
-      return next.handle()
+      return next.handle();
     }
 
-    const request = context.switchToHttp().getRequest<Request>()
-    const user = request.user as any // Assuming user is attached to request
+    const request = context.switchToHttp().getRequest<Request>();
+    const user = request.user as any; // Assuming user is attached to request
 
     if (!user?.id) {
-      return next.handle()
+      return next.handle();
     }
 
-    const startTime = Date.now()
+    const startTime = Date.now();
 
     return next.handle().pipe(
       tap((response) => {
-        this.logAction(auditMetadata, request, user.id, "SUCCESS", response, Date.now() - startTime)
+        this.logAction(
+          auditMetadata,
+          request,
+          user.id,
+          'SUCCESS',
+          response,
+          Date.now() - startTime,
+        );
       }),
       catchError((error) => {
-        this.logAction(auditMetadata, request, user.id, "ERROR", { error: error.message }, Date.now() - startTime)
-        throw error
+        this.logAction(
+          auditMetadata,
+          request,
+          user.id,
+          'ERROR',
+          { error: error.message },
+          Date.now() - startTime,
+        );
+        throw error;
       }),
-    )
+    );
   }
 
   private async logAction(
     metadata: AuditLogMetadata,
     request: Request,
     userId: string,
-    result: "SUCCESS" | "ERROR",
+    result: 'SUCCESS' | 'ERROR',
     responseData: any,
     duration: number,
   ) {
@@ -62,20 +84,20 @@ export class AuditLogInterceptor implements NestInterceptor {
         url: request.url,
         duration,
         result,
-      }
+      };
 
       if (metadata.includeParams && request.params) {
-        logMetadata.params = request.params
+        logMetadata.params = request.params;
       }
 
       if (metadata.includeBody && request.body) {
         // Sanitize sensitive data
-        const sanitizedBody = this.sanitizeData(request.body)
-        logMetadata.requestBody = sanitizedBody
+        const sanitizedBody = this.sanitizeData(request.body);
+        logMetadata.requestBody = sanitizedBody;
       }
 
-      if (result === "SUCCESS" && responseData) {
-        logMetadata.responseSize = JSON.stringify(responseData).length
+      if (result === 'SUCCESS' && responseData) {
+        logMetadata.responseSize = JSON.stringify(responseData).length;
       }
 
       await this.auditLogService.logAction({
@@ -83,39 +105,45 @@ export class AuditLogInterceptor implements NestInterceptor {
         userId,
         metadata: logMetadata,
         ipAddress: this.getClientIp(request),
-        userAgent: request.headers["user-agent"],
+        userAgent: request.headers['user-agent'],
         resource: metadata.resource,
         result,
-      })
+      });
     } catch (error) {
       // Log error but don't throw to avoid breaking the main request
-      console.error("Failed to create audit log:", error)
+      console.error('Failed to create audit log:', error);
     }
   }
 
   private sanitizeData(data: any): any {
-    const sensitiveFields = ["password", "token", "secret", "key", "authorization"]
+    const sensitiveFields = [
+      'password',
+      'token',
+      'secret',
+      'key',
+      'authorization',
+    ];
 
-    if (typeof data !== "object" || data === null) {
-      return data
+    if (typeof data !== 'object' || data === null) {
+      return data;
     }
 
-    const sanitized = { ...data }
+    const sanitized = { ...data };
 
     for (const field of sensitiveFields) {
       if (field in sanitized) {
-        sanitized[field] = "[REDACTED]"
+        sanitized[field] = '[REDACTED]';
       }
     }
 
-    return sanitized
+    return sanitized;
   }
 
   private getClientIp(request: Request): string {
-    return ((request.headers["x-forwarded-for"] as string)?.split(",")[0] ||
-      request.headers["x-real-ip"] ||
+    return ((request.headers['x-forwarded-for'] as string)?.split(',')[0] ||
+      request.headers['x-real-ip'] ||
       request.connection?.remoteAddress ||
       request.socket?.remoteAddress ||
-      "unknown") as string
+      'unknown') as string;
   }
 }

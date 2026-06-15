@@ -53,22 +53,22 @@ describe('HashingService', () => {
 
     it('should enforce minimum salt rounds', async () => {
       // Create service with low salt rounds
-      const lowSaltService = new HashingService(
-        mockConfigService,
-        { ...mockTypedConfigService, bcryptSaltRounds: 5 } as any
-      );
-      
+      const lowSaltService = new HashingService(mockConfigService, {
+        ...mockTypedConfigService,
+        bcryptSaltRounds: 5,
+      } as any);
+
       expect(lowSaltService).toBeDefined();
       // The service should internally use minimum of 10 rounds
     });
 
     it('should enforce maximum salt rounds', async () => {
       // Create service with high salt rounds
-      const highSaltService = new HashingService(
-        mockConfigService,
-        { ...mockTypedConfigService, bcryptSaltRounds: 20 } as any
-      );
-      
+      const highSaltService = new HashingService(mockConfigService, {
+        ...mockTypedConfigService,
+        bcryptSaltRounds: 20,
+      } as any);
+
       expect(highSaltService).toBeDefined();
       // The service should internally use maximum of 15 rounds
     });
@@ -78,7 +78,7 @@ describe('HashingService', () => {
     it('should hash password successfully', async () => {
       const password = 'testPassword123!';
       const hashedPassword = 'hashedPassword';
-      
+
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
 
       const result = await service.hashPassword(password);
@@ -89,16 +89,18 @@ describe('HashingService', () => {
 
     it('should throw InternalServerErrorException on bcrypt error', async () => {
       const password = 'testPassword123!';
-      
+
       (bcrypt.hash as jest.Mock).mockRejectedValue(new Error('Bcrypt error'));
 
-      await expect(service.hashPassword(password)).rejects.toThrow('Error hashing password');
+      await expect(service.hashPassword(password)).rejects.toThrow(
+        'Error hashing password',
+      );
     });
 
     it('should handle empty password', async () => {
       const password = '';
       const hashedPassword = 'hashedEmptyPassword';
-      
+
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
 
       const result = await service.hashPassword(password);
@@ -110,7 +112,7 @@ describe('HashingService', () => {
     it('should handle special characters in password', async () => {
       const password = 'P@ssw0rd!@#$%^&*()_+-=[]{}|;:,.<>?';
       const hashedPassword = 'hashedSpecialPassword';
-      
+
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
 
       const result = await service.hashPassword(password);
@@ -124,58 +126,86 @@ describe('HashingService', () => {
     it('should return true for matching passwords', async () => {
       const plainPassword = 'testPassword123!';
       const hashedPassword = 'hashedPassword';
-      
+
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      const result = await service.comparePassword(plainPassword, hashedPassword);
+      const result = await service.comparePassword(
+        plainPassword,
+        hashedPassword,
+      );
 
       expect(result).toBe(true);
-      expect(bcrypt.compare).toHaveBeenCalledWith(plainPassword, hashedPassword);
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        plainPassword,
+        hashedPassword,
+      );
     });
 
     it('should return false for non-matching passwords', async () => {
       const plainPassword = 'testPassword123!';
       const hashedPassword = 'hashedPassword';
-      
+
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      const result = await service.comparePassword(plainPassword, hashedPassword);
+      const result = await service.comparePassword(
+        plainPassword,
+        hashedPassword,
+      );
 
       expect(result).toBe(false);
-      expect(bcrypt.compare).toHaveBeenCalledWith(plainPassword, hashedPassword);
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        plainPassword,
+        hashedPassword,
+      );
     });
 
     it('should throw InternalServerErrorException on bcrypt error', async () => {
       const plainPassword = 'testPassword123!';
       const hashedPassword = 'hashedPassword';
-      
-      (bcrypt.compare as jest.Mock).mockRejectedValue(new Error('Bcrypt error'));
 
-      await expect(service.comparePassword(plainPassword, hashedPassword)).rejects.toThrow('Error comparing passwords');
+      (bcrypt.compare as jest.Mock).mockRejectedValue(
+        new Error('Bcrypt error'),
+      );
+
+      await expect(
+        service.comparePassword(plainPassword, hashedPassword),
+      ).rejects.toThrow('Error comparing passwords');
     });
 
     it('should handle empty plain password', async () => {
       const plainPassword = '';
       const hashedPassword = 'hashedPassword';
-      
+
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      const result = await service.comparePassword(plainPassword, hashedPassword);
+      const result = await service.comparePassword(
+        plainPassword,
+        hashedPassword,
+      );
 
       expect(result).toBe(false);
-      expect(bcrypt.compare).toHaveBeenCalledWith(plainPassword, hashedPassword);
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        plainPassword,
+        hashedPassword,
+      );
     });
 
     it('should handle empty hashed password', async () => {
       const plainPassword = 'testPassword123!';
       const hashedPassword = '';
-      
+
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      const result = await service.comparePassword(plainPassword, hashedPassword);
+      const result = await service.comparePassword(
+        plainPassword,
+        hashedPassword,
+      );
 
       expect(result).toBe(false);
-      expect(bcrypt.compare).toHaveBeenCalledWith(plainPassword, hashedPassword);
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        plainPassword,
+        hashedPassword,
+      );
     });
   });
 
@@ -183,7 +213,7 @@ describe('HashingService', () => {
     it('should use consistent timing for password comparison', async () => {
       const plainPassword = 'testPassword123!';
       const hashedPassword = 'hashedPassword';
-      
+
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       const startTime = Date.now();
@@ -192,14 +222,17 @@ describe('HashingService', () => {
 
       // bcrypt should provide consistent timing
       expect(endTime - startTime).toBeGreaterThan(0);
-      expect(bcrypt.compare).toHaveBeenCalledWith(plainPassword, hashedPassword);
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        plainPassword,
+        hashedPassword,
+      );
     });
 
     it('should generate different hashes for same password', async () => {
       const password = 'testPassword123!';
       const hash1 = 'hash1';
       const hash2 = 'hash2';
-      
+
       (bcrypt.hash as jest.Mock)
         .mockResolvedValueOnce(hash1)
         .mockResolvedValueOnce(hash2);

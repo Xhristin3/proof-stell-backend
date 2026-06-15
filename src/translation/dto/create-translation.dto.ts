@@ -1,22 +1,22 @@
-import { IsString, IsOptional, IsNumber, Length } from "class-validator"
+import { IsString, IsOptional, IsNumber, Length } from 'class-validator';
 
 export class CreateTranslationDto {
   @IsString()
   @Length(1, 255)
-  key: string
+  key: string;
 
   @IsString()
-  value: string
+  value: string;
 
   @IsOptional()
   @IsString()
   @Length(1, 100)
-  namespace?: string
+  namespace?: string;
 
   @IsOptional()
   @IsString()
-  description?: string
+  description?: string;
 
   @IsNumber()
-  languageId: number
+  languageId: number;
 }

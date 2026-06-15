@@ -7,15 +7,15 @@ import {
   ManyToOne,
   OneToMany,
   JoinColumn,
-} from "typeorm"
-import { User } from "../../users/entities/user.entity"
-import { ChallengeAttempt } from "./challenge-attempt.entity"
+} from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { ChallengeAttempt } from './challenge-attempt.entity';
 
 export enum ChallengeType {
-  CODING = "coding",
-  QUIZ = "quiz",
-  PROBLEM_SOLVING = "problem_solving",
-  ALGORITHM = "algorithm",
+  CODING = 'coding',
+  QUIZ = 'quiz',
+  PROBLEM_SOLVING = 'problem_solving',
+  ALGORITHM = 'algorithm',
 }
 
 export enum DifficultyLevel {
@@ -26,57 +26,54 @@ export enum DifficultyLevel {
   EXPERT = 5,
 }
 
-@Entity("challenges")
+@Entity('challenges')
 export class Challenge {
-  @PrimaryGeneratedColumn("uuid")
-  id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column({ type: "varchar", length: 255 })
-  title: string
+  @Column({ type: 'varchar', length: 255 })
+  title: string;
 
-  @Column({ type: "text" })
-  description: string
+  @Column({ type: 'text' })
+  description: string;
 
-  @Column({ type: "enum", enum: ChallengeType })
-  type: ChallengeType
+  @Column({ type: 'enum', enum: ChallengeType })
+  type: ChallengeType;
 
-  @Column({ type: "enum", enum: DifficultyLevel })
-  difficulty: DifficultyLevel
+  @Column({ type: 'enum', enum: DifficultyLevel })
+  difficulty: DifficultyLevel;
 
-  @Column({ type: "jsonb", nullable: true })
-  content: any // Flexible content structure for different challenge types
+  @Column({ type: 'jsonb', nullable: true })
+  content: any; // Flexible content structure for different challenge types
 
-  @Column({ type: "jsonb", nullable: true })
-  solution: any // Expected solution or answer
+  @Column({ type: 'jsonb', nullable: true })
+  solution: any; // Expected solution or answer
 
-  @Column({ type: "int", default: 100 })
-  basePoints: number
+  @Column({ type: 'int', default: 100 })
+  basePoints: number;
 
-  @Column({ type: "int", default: 3600 }) // 1 hour in seconds
-  timeLimit: number
+  @Column({ type: 'int', default: 3600 }) // 1 hour in seconds
+  timeLimit: number;
 
-  @Column({ type: "varchar", array: true, default: [] })
-  tags: string[]
+  @Column({ type: 'varchar', array: true, default: [] })
+  tags: string[];
 
-  @Column({ type: "boolean", default: true })
-  isActive: boolean
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 
-  @Column({ type: "uuid", nullable: true })
-  createdBy: string
+  @Column({ type: 'uuid', nullable: true })
+  createdBy: string;
 
   @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: "createdBy" })
-  creator: User
+  @JoinColumn({ name: 'createdBy' })
+  creator: User;
 
-  @OneToMany(
-    () => ChallengeAttempt,
-    (attempt) => attempt.challenge,
-  )
-  attempts: ChallengeAttempt[]
+  @OneToMany(() => ChallengeAttempt, (attempt) => attempt.challenge)
+  attempts: ChallengeAttempt[];
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt: Date;
 }

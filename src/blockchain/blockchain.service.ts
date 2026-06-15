@@ -30,12 +30,19 @@ export class BlockchainService {
       calldata: [userId.toString()],
     });
     if (this.analyticsService) {
-      await this.analyticsService.track(AnalyticsEvent.TokenMinted, { userId: String(userId), metadata: { transaction_hash: tx.transaction_hash } });
+      await this.analyticsService.track(AnalyticsEvent.TokenMinted, {
+        userId: String(userId),
+        metadata: { transaction_hash: tx.transaction_hash },
+      });
     }
     return { transaction_hash: tx.transaction_hash };
   }
 
-  async sendTransferTx(fromUserId: number, toUserId: number, amount: number): Promise<{ transaction_hash: string }> {
+  async sendTransferTx(
+    fromUserId: number,
+    toUserId: number,
+    amount: number,
+  ): Promise<{ transaction_hash: string }> {
     const contractAddress = this.configService.mintContractAddress;
     const tx = await this.account.execute({
       contractAddress,
@@ -51,7 +58,10 @@ export class BlockchainService {
     return { transaction_hash: tx.transaction_hash };
   }
 
-  async sendBurnTx(userId: number, amount: number): Promise<{ transaction_hash: string }> {
+  async sendBurnTx(
+    userId: number,
+    amount: number,
+  ): Promise<{ transaction_hash: string }> {
     const contractAddress = this.configService.mintContractAddress;
     const tx = await this.account.execute({
       contractAddress,
@@ -71,7 +81,7 @@ export class BlockchainService {
     const contractAddress = this.configService.mintContractAddress;
     const contract = new Contract([], contractAddress, this.provider);
     const result = await contract.call('balanceOf', [userId.toString()]);
-    const balance = result?.balance?.toString() || result?.toString() || '0';
+    const balance = result?.toString() || '0';
     return { balance };
   }
 }

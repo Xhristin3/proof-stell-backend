@@ -35,7 +35,9 @@ export class ChallengeService {
     const key = `challenge:${today.toISOString().slice(0, 10)}`;
     let challenge = await this.cacheManager.get<Challenge>(key);
     if (!challenge) {
-      challenge = await this.challengeRepository.findOne({ where: { date: today } });
+      challenge = await this.challengeRepository.findOne({
+        where: { date: today },
+      });
       if (challenge) {
         await this.cacheManager.set(key, challenge, 86400);
       } else {
@@ -44,18 +46,26 @@ export class ChallengeService {
     }
     // Track challenge started event if userId is provided
     if (userId && this.analyticsService) {
-      await this.analyticsService.track(AnalyticsEvent.ChallengeStarted, { userId, metadata: { challengeId: challenge.id } });
+      await this.analyticsService.track(AnalyticsEvent.ChallengeStarted, {
+        userId,
+        metadata: { challengeId: challenge.id },
+      });
     }
-    return plainToInstance(ChallengeResponseDto, challenge, { excludeExtraneousValues: true });
+    return plainToInstance(ChallengeResponseDto, challenge, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async generateAndSaveTodayChallenge(): Promise<Challenge> {
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
     // Simple mock pattern and random difficulty
-    const pattern = JSON.stringify({ moles: Array.from({ length: 9 }, () => Math.round(Math.random())) });
+    const pattern = JSON.stringify({
+      moles: Array.from({ length: 9 }, () => Math.round(Math.random())),
+    });
     const difficulties = Object.values(ChallengeDifficulty);
-    const difficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
+    const difficulty =
+      difficulties[Math.floor(Math.random() * difficulties.length)];
     const challenge = this.challengeRepository.create({
       pattern,
       difficulty,
@@ -64,7 +74,9 @@ export class ChallengeService {
     const saved = await this.challengeRepository.save(challenge);
     const key = `challenge:${today.toISOString().slice(0, 10)}`;
     await this.cacheManager.set(key, saved, 86400);
-    this.logger.log(`Generated and cached new challenge for ${today.toISOString().slice(0, 10)}`);
+    this.logger.log(
+      `Generated and cached new challenge for ${today.toISOString().slice(0, 10)}`,
+    );
     return saved;
   }
 
@@ -72,7 +84,9 @@ export class ChallengeService {
   async handleDailyChallengeGeneration() {
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
-    const exists = await this.challengeRepository.findOne({ where: { date: today } });
+    const exists = await this.challengeRepository.findOne({
+      where: { date: today },
+    });
     if (!exists) {
       await this.generateAndSaveTodayChallenge();
     }

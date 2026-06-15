@@ -35,7 +35,7 @@ export class JwtSecurityService {
       {
         expiresIn: this.REFRESH_TOKEN_EXPIRY,
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      }
+      },
     );
   }
 
@@ -63,15 +63,15 @@ export class JwtSecurityService {
    */
   async revokeToken(token: string): Promise<void> {
     try {
-      const decoded = this.jwtService.decode(token) as any;
+      const decoded = this.jwtService.decode(token);
       if (decoded && decoded.exp) {
         // Calculate TTL based on token expiry
-        const ttl = (decoded.exp * 1000) - Date.now();
+        const ttl = decoded.exp * 1000 - Date.now();
         if (ttl > 0) {
           await this.cacheManager.set(
             `${this.JWT_BLACKLIST_PREFIX}${token}`,
             'blacklisted',
-            ttl
+            ttl,
           );
         }
       }
@@ -80,7 +80,7 @@ export class JwtSecurityService {
       await this.cacheManager.set(
         `${this.JWT_BLACKLIST_PREFIX}${token}`,
         'blacklisted',
-        3600000 // 1 hour default TTL
+        3600000, // 1 hour default TTL
       );
     }
   }
@@ -89,7 +89,9 @@ export class JwtSecurityService {
    * Check if token is blacklisted
    */
   private async isTokenBlacklisted(token: string): Promise<boolean> {
-    const blacklisted = await this.cacheManager.get(`${this.JWT_BLACKLIST_PREFIX}${token}`);
+    const blacklisted = await this.cacheManager.get(
+      `${this.JWT_BLACKLIST_PREFIX}${token}`,
+    );
     return !!blacklisted;
   }
 
@@ -124,4 +126,3 @@ export class JwtSecurityService {
     }
   }
 }
-

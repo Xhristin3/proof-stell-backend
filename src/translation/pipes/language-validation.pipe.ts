@@ -1,5 +1,10 @@
-import { type PipeTransform, Injectable, type ArgumentMetadata, BadRequestException } from "@nestjs/common"
-import type { TranslationService } from "../services/translation.service"
+import {
+  type PipeTransform,
+  Injectable,
+  type ArgumentMetadata,
+  BadRequestException,
+} from '@nestjs/common';
+import type { TranslationService } from '../services/translation.service';
 
 @Injectable()
 export class LanguageValidationPipe implements PipeTransform {
@@ -7,14 +12,16 @@ export class LanguageValidationPipe implements PipeTransform {
 
   async transform(value: string, metadata: ArgumentMetadata): Promise<string> {
     if (!value) {
-      throw new BadRequestException("Language code is required")
+      throw new BadRequestException('Language code is required');
     }
 
     try {
-      await this.translationService.findLanguageByCode(value)
-      return value
+      await this.translationService.findLanguageByCode(value);
+      return value;
     } catch (error) {
-      throw new BadRequestException(`Invalid or inactive language code: ${value}`)
+      throw new BadRequestException(
+        `Invalid or inactive language code: ${value}`,
+      );
     }
   }
 }

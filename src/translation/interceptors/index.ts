@@ -1,1 +1,1 @@
-export { TranslationInterceptor } from "./translation.interceptor"
+export { TranslationInterceptor } from './translation.interceptor';

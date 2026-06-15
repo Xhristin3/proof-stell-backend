@@ -1,1 +1,1 @@
-export { LanguageGuard } from "./language.guard"
+export { LanguageGuard } from './language.guard';

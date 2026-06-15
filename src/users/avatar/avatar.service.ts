@@ -18,12 +18,10 @@ export class AvatarService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    
-    const filename = `${userId}-${Date.now()}-avatar.webp`; 
-    const uploadDir = path.join(process.cwd(), 'public', 'avatars'); 
+    const filename = `${userId}-${Date.now()}-avatar.webp`;
+    const uploadDir = path.join(process.cwd(), 'public', 'avatars');
     const filePath = path.join(uploadDir, filename);
 
-    
     await fs.mkdir(uploadDir, { recursive: true });
 
     try {
@@ -32,7 +30,7 @@ export class AvatarService {
           fit: sharp.fit.cover,
           position: sharp.strategy.attention,
         })
-        .webp({ quality: 80 }) 
+        .webp({ quality: 80 })
         .toFile(filePath);
     } catch (error) {
       console.error('Error processing image:', error);
@@ -42,16 +40,14 @@ export class AvatarService {
       );
     }
 
-    
-    const avatarUrl = `/avatars/${filename}`; 
+    const avatarUrl = `/avatars/${filename}`;
     user.avatarUrl = avatarUrl;
     await user.save();
 
     return { message: 'Avatar uploaded successfully', avatarUrl };
   }
 
-  
   getDefaultAvatarUrl(): string {
-    return '/avatars/default-avatar.png'; 
+    return '/avatars/default-avatar.png';
   }
 }

@@ -11,6 +11,24 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 import { Type } from 'class-transformer';
 
+export class EmailPreferencesDto {
+  @ApiPropertyOptional({
+    description: 'Receive promotional emails',
+    example: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  promotional?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Receive transactional emails',
+    example: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  transactional?: boolean;
+}
+
 export class UpdateUserDto extends PartialType(
   OmitType(CreateUserDto, ['password'] as const),
 ) {
@@ -68,23 +86,4 @@ export class UpdateUserDto extends PartialType(
   @ValidateNested()
   @Type(() => EmailPreferencesDto)
   emailPreferences?: EmailPreferencesDto;
-}
-
-
-export class EmailPreferencesDto {
-  @ApiPropertyOptional({
-    description: 'Receive promotional emails',
-    example: true,
-  })
-  @IsOptional()
-  @IsBoolean()
-  promotional?: boolean;
-
-  @ApiPropertyOptional({
-    description: 'Receive transactional emails',
-    example: true,
-  })
-  @IsOptional()
-  @IsBoolean()
-  transactional?: boolean;
 }

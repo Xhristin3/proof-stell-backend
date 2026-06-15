@@ -2,11 +2,11 @@
  * Interface for a generic accessibility issue found during data validation.
  */
 export interface AccessibilityIssue {
-  code: string // Unique code for the issue (e.g., "MISSING_ALT_TEXT")
-  message: string // Human-readable description of the issue
-  path: string // JSON path to the problematic data (e.g., "data.items[0].imageUrl")
-  severity: "low" | "medium" | "high" | "critical"
-  context?: Record<string, any> // Additional context about the issue
+  code: string; // Unique code for the issue (e.g., "MISSING_ALT_TEXT")
+  message: string; // Human-readable description of the issue
+  path: string; // JSON path to the problematic data (e.g., "data.items[0].imageUrl")
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  context?: Record<string, any>; // Additional context about the issue
 }
 
 /**
@@ -14,30 +14,37 @@ export interface AccessibilityIssue {
  * This backend module can conceptually store or process such reports.
  */
 export interface AccessibilityReport {
-  reportId: string
-  timestamp: Date
-  url: string // URL of the page audited
-  tool: string // e.g., "Lighthouse", "axe DevTools"
-  score?: number // Overall accessibility score
-  issues: AccessibilityIssue[]
-  metadata?: Record<string, any> // Additional report metadata
+  reportId: string;
+  timestamp: Date;
+  url: string; // URL of the page audited
+  tool: string; // e.g., "Lighthouse", "axe DevTools"
+  score?: number; // Overall accessibility score
+  issues: AccessibilityIssue[];
+  metadata?: Record<string, any>; // Additional report metadata
 }
 
 /**
  * Interface for data that contains image information, requiring alt text.
  */
 export interface ImageWithAltText {
-  url: string
-  altText?: string
-  caption?: string
+  url: string;
+  altText?: string;
+  caption?: string;
 }
 
 /**
  * Interface for data that should have a clear semantic purpose.
  */
 export interface SemanticContent {
-  type: "heading" | "paragraph" | "list" | "button" | "link" | "image" | "other"
-  content: string
-  level?: number // For headings (h1, h2, etc.)
-  ariaLabel?: string // For interactive elements
+  type:
+    | 'heading'
+    | 'paragraph'
+    | 'list'
+    | 'button'
+    | 'link'
+    | 'image'
+    | 'other';
+  content: string;
+  level?: number; // For headings (h1, h2, etc.)
+  ariaLabel?: string; // For interactive elements
 }

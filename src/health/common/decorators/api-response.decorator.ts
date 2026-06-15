@@ -1,7 +1,11 @@
-import { applyDecorators, type Type } from "@nestjs/common"
-import { ApiResponse, getSchemaPath } from "@nestjs/swagger"
+import { applyDecorators, type Type } from '@nestjs/common';
+import { ApiResponse, getSchemaPath } from '@nestjs/swagger';
 
-export const ApiResponseDto = <TModel extends Type<any>>(model: TModel, status = 200, description?: string) => {
+export const ApiResponseDto = <TModel extends Type<any>>(
+  model: TModel,
+  status = 200,
+  description?: string,
+) => {
   return applyDecorators(
     ApiResponse({
       status,
@@ -10,10 +14,12 @@ export const ApiResponseDto = <TModel extends Type<any>>(model: TModel, status =
         $ref: getSchemaPath(model),
       },
     }),
-  )
-}
+  );
+};
 
-export const ApiPaginatedResponse = <TModel extends Type<any>>(model: TModel) => {
+export const ApiPaginatedResponse = <TModel extends Type<any>>(
+  model: TModel,
+) => {
   return applyDecorators(
     ApiResponse({
       status: 200,
@@ -23,16 +29,16 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(model: TModel) =>
           {
             properties: {
               data: {
-                type: "array",
+                type: 'array',
                 items: { $ref: getSchemaPath(model) },
               },
               meta: {
-                type: "object",
+                type: 'object',
                 properties: {
-                  total: { type: "number" },
-                  page: { type: "number" },
-                  limit: { type: "number" },
-                  totalPages: { type: "number" },
+                  total: { type: 'number' },
+                  page: { type: 'number' },
+                  limit: { type: 'number' },
+                  totalPages: { type: 'number' },
                 },
               },
             },
@@ -40,5 +46,5 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(model: TModel) =>
         ],
       },
     }),
-  )
-}
+  );
+};

@@ -35,7 +35,7 @@ export class LeaderboardService {
       relations: ['user'],
     });
 
-    let previousRank: number | undefined = leaderboardEntry?.rank;
+    const previousRank: number | undefined = leaderboardEntry?.rank;
 
     if (leaderboardEntry) {
       if (score > leaderboardEntry.score) {

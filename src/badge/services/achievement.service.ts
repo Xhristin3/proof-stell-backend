@@ -251,9 +251,9 @@ export class AchievementService {
     // Define win condition based on your game logic
     // This is a simple example - adjust based on your requirements
     if (game.maxPossibleScore > 0) {
-      return game.score >= game.maxPossibleScore * 0.7; 
+      return game.score >= game.maxPossibleScore * 0.7;
     }
-    return game.score > 40; 
+    return game.score > 40;
   }
 
   private async awardBadgeAutomatically(

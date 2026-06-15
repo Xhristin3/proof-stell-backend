@@ -6,7 +6,8 @@ export default registerAs('app', () => ({
   databaseUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
   bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS || '12', 10),
-  leaderboardRecalculationStrategy: process.env.LEADERBOARD_RECALCULATION_STRATEGY || 'batch',
+  leaderboardRecalculationStrategy:
+    process.env.LEADERBOARD_RECALCULATION_STRATEGY || 'batch',
   redisHost: process.env.REDIS_HOST || 'localhost',
   redisPort: parseInt(process.env.REDIS_PORT || '6379', 10),
   starknetPrivateKey: process.env.STARKNET_PRIVATE_KEY,

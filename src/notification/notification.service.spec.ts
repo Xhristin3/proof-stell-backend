@@ -33,7 +33,9 @@ describe('NotificationService', () => {
       ],
     }).compile();
     service = module.get<NotificationService>(NotificationService);
-    repo = module.get<Repository<Notification>>(getRepositoryToken(Notification));
+    repo = module.get<Repository<Notification>>(
+      getRepositoryToken(Notification),
+    );
     gateway = module.get<RealtimeGateway>(RealtimeGateway);
   });
 
@@ -50,8 +52,14 @@ describe('NotificationService', () => {
         type: 'info',
         icon: '🔔',
       };
-      const created = [{ ...dto, userId: 'u1' }, { ...dto, userId: 'u2' }];
-      (repo.create as any).mockImplementation(({ userId, ...rest }) => ({ userId, ...rest }));
+      const created = [
+        { ...dto, userId: 'u1' },
+        { ...dto, userId: 'u2' },
+      ];
+      (repo.create as any).mockImplementation(({ userId, ...rest }) => ({
+        userId,
+        ...rest,
+      }));
       (repo.save as any).mockResolvedValue(created);
       const result = await service.create(dto as any);
       expect(repo.create).toHaveBeenCalledTimes(2);
@@ -86,11 +94,15 @@ describe('NotificationService', () => {
     });
     it('should throw NotFoundException if not found', async () => {
       (repo.findOne as any).mockResolvedValue(undefined);
-      await expect(service.markAsRead('bad', 'u1')).rejects.toThrow(NotFoundException);
+      await expect(service.markAsRead('bad', 'u1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
     it('should throw ForbiddenException if userId does not match', async () => {
       (repo.findOne as any).mockResolvedValue({ id: 'n1', userId: 'other' });
-      await expect(service.markAsRead('n1', 'u1')).rejects.toThrow(ForbiddenException);
+      await expect(service.markAsRead('n1', 'u1')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
-}); 
+});

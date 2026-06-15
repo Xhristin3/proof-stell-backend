@@ -1,23 +1,23 @@
-import { IsString, IsBoolean, IsOptional, Length } from "class-validator"
+import { IsString, IsBoolean, IsOptional, Length } from 'class-validator';
 
 export class CreateLanguageDto {
   @IsString()
   @Length(2, 10)
-  code: string
+  code: string;
 
   @IsString()
   @Length(1, 100)
-  name: string
+  name: string;
 
   @IsString()
   @Length(1, 100)
-  nativeName: string
+  nativeName: string;
 
   @IsOptional()
   @IsBoolean()
-  isActive?: boolean
+  isActive?: boolean;
 
   @IsOptional()
   @IsBoolean()
-  isDefault?: boolean
+  isDefault?: boolean;
 }

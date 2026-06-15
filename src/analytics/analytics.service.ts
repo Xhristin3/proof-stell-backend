@@ -2,7 +2,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, FindOptionsWhere } from 'typeorm';
-import { CACHE_MANAGER, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { CreateAnalyticsDto } from './dto/create-analytics.dto';
 import { AnalyticsEvent } from './analytics-event.enum';
@@ -214,7 +215,7 @@ export class AnalyticsService {
       ...(row.event && { event: row.event }),
     }));
 
-    await this.cacheManager.set(cacheKey, mapped, { ttl: 60 }); // cache for 60s
+    await this.cacheManager.set(cacheKey, mapped, 60); // cache for 60s
     return mapped;
   }
 
@@ -250,7 +251,7 @@ export class AnalyticsService {
 
   const result = await queryBuilder.getRawOne();
   const val = parseInt(result.count) || 0;
-  await this.cacheManager.set(cacheKey, val, { ttl: 60 });
+  await this.cacheManager.set(cacheKey, val, 60);
   return val;
   }
 

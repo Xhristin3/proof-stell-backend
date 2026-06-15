@@ -1,1 +1,1 @@
-export { TranslationHelper } from "./translation.helper"
+export { TranslationHelper } from './translation.helper';

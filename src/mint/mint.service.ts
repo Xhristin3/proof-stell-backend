@@ -11,7 +11,7 @@ export class MintService {
     @InjectRepository(Mint)
     private readonly mintRepository: Repository<Mint>,
 
-    private readonly blockchainService: BlockchainService
+    private readonly blockchainService: BlockchainService,
   ) {}
   async mint(userId: number): Promise<Mint> {
     const txResponse = await this.blockchainService.sendMintTx(userId);

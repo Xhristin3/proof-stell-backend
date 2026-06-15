@@ -8,7 +8,10 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable, of, tap } from 'rxjs';
 import { CacheService } from '../cache.service';
-import { CACHE_KEY_METADATA, CACHE_TTL_METADATA } from '../decorators/cache.decorator';
+import {
+  CACHE_KEY_METADATA,
+  CACHE_TTL_METADATA,
+} from '../decorators/cache.decorator';
 import { Request } from 'express';
 
 @Injectable()
@@ -20,9 +23,15 @@ export class CacheInterceptor implements NestInterceptor {
     private readonly reflector: Reflector,
   ) {}
 
-  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
-    const cacheMetadata = this.reflector.get(CACHE_KEY_METADATA, context.getHandler());
-    
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
+    const cacheMetadata = this.reflector.get(
+      CACHE_KEY_METADATA,
+      context.getHandler(),
+    );
+
     if (!cacheMetadata) {
       return next.handle();
     }
@@ -36,7 +45,10 @@ export class CacheInterceptor implements NestInterceptor {
     }
 
     const cacheKey = this.buildCacheKey(cacheMetadata.key, context);
-    const ttl = cacheMetadata.ttl || this.reflector.get(CACHE_TTL_METADATA, context.getHandler()) || 300;
+    const ttl =
+      cacheMetadata.ttl ||
+      this.reflector.get(CACHE_TTL_METADATA, context.getHandler()) ||
+      300;
 
     // Try to get from cache
     const cachedResult = await this.cacheService.get(cacheKey);
@@ -50,7 +62,9 @@ export class CacheInterceptor implements NestInterceptor {
       tap(async (data) => {
         if (data !== undefined && data !== null) {
           await this.cacheService.set(cacheKey, data, ttl);
-          this.logger.debug(`Cached result for key: ${cacheKey} with TTL: ${ttl}s`);
+          this.logger.debug(
+            `Cached result for key: ${cacheKey} with TTL: ${ttl}s`,
+          );
         }
       }),
     );
@@ -59,23 +73,23 @@ export class CacheInterceptor implements NestInterceptor {
   private buildCacheKey(template: string, context: ExecutionContext): string {
     const request = context.switchToHttp().getRequest();
     const { params, query, user } = request;
-    
+
     let key = template;
-    
+
     // Replace URL parameters
     if (params) {
       for (const [param, value] of Object.entries(params)) {
         key = key.replace(new RegExp(`{${param}}`, 'g'), String(value));
       }
     }
-    
+
     // Replace query parameters
     if (query) {
       for (const [param, value] of Object.entries(query)) {
         key = key.replace(new RegExp(`{${param}}`, 'g'), String(value));
       }
     }
-    
+
     // Replace user information
     if (user) {
       key = key.replace(/{userId}/g, user.id || user.userId || '');

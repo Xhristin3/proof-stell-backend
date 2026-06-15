@@ -1,36 +1,40 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ErrorResponseDto {
   @ApiProperty({
-    description: "HTTP status code",
+    description: 'HTTP status code',
     example: 400,
   })
-  statusCode: number
+  statusCode: number;
 
   @ApiProperty({
-    description: "Error message or array of validation errors",
+    description: 'Error message or array of validation errors',
     oneOf: [
-      { type: "string", example: "Bad Request" },
-      { type: "array", items: { type: "string" }, example: ["email must be an email"] },
+      { type: 'string', example: 'Bad Request' },
+      {
+        type: 'array',
+        items: { type: 'string' },
+        example: ['email must be an email'],
+      },
     ],
   })
-  message: string | string[]
+  message: string | string[];
 
   @ApiProperty({
-    description: "Error type",
-    example: "Bad Request",
+    description: 'Error type',
+    example: 'Bad Request',
   })
-  error: string
+  error: string;
 
   @ApiProperty({
-    description: "Request timestamp",
-    example: "2024-01-01T00:00:00.000Z",
+    description: 'Request timestamp',
+    example: '2024-01-01T00:00:00.000Z',
   })
-  timestamp: string
+  timestamp: string;
 
   @ApiProperty({
-    description: "Request path",
-    example: "/api/users",
+    description: 'Request path',
+    example: '/api/users',
   })
-  path: string
+  path: string;
 }

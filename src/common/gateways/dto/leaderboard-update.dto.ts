@@ -6,5 +6,5 @@ export class LeaderboardUpdateDto {
   leaderboardId: string;
 
   @IsArray()
-  scores: any[]; 
-} 
+  scores: any[];
+}

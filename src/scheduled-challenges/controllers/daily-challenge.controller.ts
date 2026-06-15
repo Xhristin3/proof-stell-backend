@@ -16,7 +16,13 @@ export class DailyChallengeController {
   }
 
   @Get('leaderboard/:challengeId')
-  getLeaderboard(@Param('challengeId') challengeId: string, @Query('limit') limit = 50) {
-    return this.dailyChallengeService.getChallengeLeaderboard(challengeId, Number(limit));
+  getLeaderboard(
+    @Param('challengeId') challengeId: string,
+    @Query('limit') limit = 50,
+  ) {
+    return this.dailyChallengeService.getChallengeLeaderboard(
+      challengeId,
+      Number(limit),
+    );
   }
 }

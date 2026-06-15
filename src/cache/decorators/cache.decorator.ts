@@ -9,7 +9,7 @@ export const CACHE_INVALIDATION_METADATA = 'cache:invalidation';
  * @param key - Cache key template. Use {param} for parameter interpolation
  * @param ttl - Time to live in seconds
  */
-export const Cacheable = (key: string, ttl: number = 300) => 
+export const Cacheable = (key: string, ttl: number = 300) =>
   SetMetadata(CACHE_KEY_METADATA, { key, ttl });
 
 /**
@@ -22,24 +22,26 @@ export const CacheTTL = (ttl: number) => SetMetadata(CACHE_TTL_METADATA, ttl);
  * Decorator to mark methods that should invalidate cache
  * @param patterns - Array of cache key patterns to invalidate
  */
-export const CacheEvict = (patterns: string[]) => 
+export const CacheEvict = (patterns: string[]) =>
   SetMetadata(CACHE_INVALIDATION_METADATA, patterns);
 
 /**
  * Cache key builders for common patterns
  */
 export class CacheKeys {
-  static readonly GLOBAL_LEADERBOARD = 'leaderboard:global:page:{page}:limit:{limit}';
+  static readonly GLOBAL_LEADERBOARD =
+    'leaderboard:global:page:{page}:limit:{limit}';
   static readonly USER_LEADERBOARD = 'leaderboard:user:{userId}';
   static readonly USER_PROFILE = 'user:profile:{userId}';
   static readonly USER_GAMES = 'games:user:{userId}';
   static readonly USER_GAME_STATS = 'games:user:{userId}:stats';
-  static readonly ANALYTICS_TOP_EVENTS = 'analytics:top-events:limit:{limit}:from:{from}:to:{to}';
+  static readonly ANALYTICS_TOP_EVENTS =
+    'analytics:top-events:limit:{limit}:from:{from}:to:{to}';
   static readonly ANALYTICS_DASHBOARD = 'analytics:dashboard:days:{days}';
   static readonly TODAY_CHALLENGE = 'challenge:today:{date}';
   static readonly USER_BADGES = 'badges:user:{userId}';
   static readonly AVAILABLE_BADGES = 'badges:available';
-  
+
   /**
    * Build cache key by replacing placeholders with actual values
    */

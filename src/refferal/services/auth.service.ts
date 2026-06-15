@@ -1,9 +1,9 @@
-import { Injectable, ConflictException } from "@nestjs/common"
-import type { Repository } from "typeorm"
-import type { User } from "../entities/user.entity"
-import type { RegisterDto } from "../dto/auth.dto"
-import type { ReferralService } from "./referral.service"
-import * as bcrypt from "bcrypt"
+import { Injectable, ConflictException } from '@nestjs/common';
+import type { Repository } from 'typeorm';
+import type { User } from '../entities/user.entity';
+import type { RegisterDto } from '../dto/auth.dto';
+import type { ReferralService } from './referral.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -13,22 +13,25 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<User> {
-    const { email, username, password, referralCode } = registerDto
+    const { email, username, password, referralCode } = registerDto;
 
     // Check if user already exists
     const existingUser = await this.userRepository.findOne({
       where: [{ email }, { username }],
-    })
+    });
 
     if (existingUser) {
-      throw new ConflictException("User with this email or username already exists")
+      throw new ConflictException(
+        'User with this email or username already exists',
+      );
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Generate unique referral code for new user
-    const newUserReferralCode = await this.referralService.generateUniqueReferralCode()
+    const newUserReferralCode =
+      await this.referralService.generateUniqueReferralCode();
 
     // Create user
     const user = this.userRepository.create({
@@ -36,21 +39,27 @@ export class AuthService {
       username,
       password: hashedPassword,
       referralCode: newUserReferralCode,
-    })
+    });
 
-    const savedUser = await this.userRepository.save(user)
+    const savedUser = await this.userRepository.save(user);
 
     // Handle referral if code provided
     if (referralCode) {
-      const referrer = await this.referralService.validateReferralCode(referralCode, savedUser.id)
+      const referrer = await this.referralService.validateReferralCode(
+        referralCode,
+        savedUser.id,
+      );
       if (referrer) {
-        await this.referralService.createReferralRelationship(referrer, savedUser)
+        await this.referralService.createReferralRelationship(
+          referrer,
+          savedUser,
+        );
       }
     }
 
     // Mark registration as complete
-    await this.referralService.handleRegistrationComplete(savedUser.id)
+    await this.referralService.handleRegistrationComplete(savedUser.id);
 
-    return savedUser
+    return savedUser;
   }
 }

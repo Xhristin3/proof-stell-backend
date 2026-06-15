@@ -25,7 +25,8 @@ export class RegisterDto {
   email: string;
 
   @ApiProperty({
-    description: 'Unique username for the user (alphanumeric and underscores only)',
+    description:
+      'Unique username for the user (alphanumeric and underscores only)',
     example: 'player123',
     minLength: 3,
     maxLength: 30,

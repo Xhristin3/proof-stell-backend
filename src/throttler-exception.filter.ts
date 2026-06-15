@@ -9,7 +9,7 @@ export class ThrottlerExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     response.status(429).json({
       statusCode: 429,
-      message: 'Too many requests. Please try again later.'
+      message: 'Too many requests. Please try again later.',
     });
   }
 }

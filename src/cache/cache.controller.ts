@@ -62,7 +62,10 @@ export class CacheController {
     schema: {
       type: 'object',
       properties: {
-        message: { type: 'string', example: 'Cache entry deleted successfully' },
+        message: {
+          type: 'string',
+          example: 'Cache entry deleted successfully',
+        },
         key: { type: 'string', example: 'leaderboard:global:page:1:limit:50' },
         timestamp: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
       },
@@ -121,7 +124,10 @@ export class CacheController {
     schema: {
       type: 'object',
       properties: {
-        message: { type: 'string', example: 'Cache entries cleared by pattern' },
+        message: {
+          type: 'string',
+          example: 'Cache entries cleared by pattern',
+        },
         pattern: { type: 'string', example: 'leaderboard:*' },
         timestamp: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
       },
@@ -137,7 +143,7 @@ export class CacheController {
       // For now, we'll just clear all cache. In production, implement pattern matching
       await this.cacheService.reset();
     }
-    
+
     return {
       message: 'Cache entries cleared by pattern',
       pattern,

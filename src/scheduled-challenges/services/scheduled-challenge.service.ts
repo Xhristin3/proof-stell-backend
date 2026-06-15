@@ -48,7 +48,9 @@ export class ScheduledChallengeService {
           scheduledChallenge.status = ScheduleStatus.ACTIVE;
           await this.scheduledChallengeRepository.save(scheduledChallenge);
 
-          this.logger.log(`Activated scheduled challenge: ${scheduledChallenge.id}`);
+          this.logger.log(
+            `Activated scheduled challenge: ${scheduledChallenge.id}`,
+          );
         } catch (error) {
           this.logger.error(
             `Failed to activate scheduled challenge ${scheduledChallenge.id}:`,

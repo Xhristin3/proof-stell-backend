@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Socket } from 'socket.io';
 
@@ -18,4 +23,4 @@ export class WsJwtGuard implements CanActivate {
       throw new UnauthorizedException('Invalid token');
     }
   }
-} 
+}

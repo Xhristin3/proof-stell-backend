@@ -1,4 +1,3 @@
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { LeaderboardService } from './Leaderboard.service';
@@ -84,6 +83,8 @@ describe('LeaderboardService', () => {
 
   it('should emit leaderboard update', async () => {
     await service.updateLeaderboard('test', [{ user: 'a', score: 1 }]);
-    expect(gateway.emitLeaderboardUpdate).toHaveBeenCalledWith('test', [{ user: 'a', score: 1 }]);
+    expect(gateway.emitLeaderboardUpdate).toHaveBeenCalledWith('test', [
+      { user: 'a', score: 1 },
+    ]);
   });
 });

@@ -22,7 +22,7 @@ export class MetricsService {
 
   async getActiveUsers(hours: number = 24) {
     const cacheKey = `active_users_${hours}h`;
-    let cached = await this.cacheManager.get(cacheKey);
+    const cached = await this.cacheManager.get(cacheKey);
 
     if (cached) {
       return cached;
@@ -57,7 +57,7 @@ export class MetricsService {
 
   async getSystemErrors(page: number = 1, limit: number = 50) {
     const cacheKey = `system_errors_${page}_${limit}`;
-    let cached = await this.cacheManager.get(cacheKey);
+    const cached = await this.cacheManager.get(cacheKey);
 
     if (cached) {
       return cached;
@@ -115,7 +115,7 @@ export class MetricsService {
 
   async getGamesSummary(days: number = 7) {
     const cacheKey = `games_summary_${days}d`;
-    let cached = await this.cacheManager.get(cacheKey);
+    const cached = await this.cacheManager.get(cacheKey);
 
     if (cached) {
       return cached;
@@ -167,7 +167,7 @@ export class MetricsService {
     // Since Transaction entity doesn't exist, we'll provide mock data
     // You can implement this later when you add transactions to your app
     const cacheKey = `transaction_metrics_${days}d`;
-    let cached = await this.cacheManager.get(cacheKey);
+    const cached = await this.cacheManager.get(cacheKey);
 
     if (cached) {
       return cached;
@@ -213,7 +213,7 @@ export class MetricsService {
 
   async getSystemHealth() {
     const cacheKey = 'system_health';
-    let cached = await this.cacheManager.get(cacheKey);
+    const cached = await this.cacheManager.get(cacheKey);
 
     if (cached) {
       return cached;

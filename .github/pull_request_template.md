@@ -1,72 +1,124 @@
-# 🚀 Pull Request: Profile Management & User Personalization
+# 🚀 Pull Request
 
-## 📚 Overview
-This PR implements or updates user profile management, including display name, avatar, and email notification preferences.
+## 📋 Summary
 
----
+<!-- Provide a brief description of the changes introduced in this PR. -->
 
-## ✅ Checklist: Feature Requirements
+### Type of Change
 
-- [ ] **User Entity/DTOs**
-  - [ ] `displayName` (string, optional, max length 50)
-  - [ ] `avatarUrl` (string, optional, valid URL)
-  - [ ] `emailPreferences` (object: `{ promotional: boolean; transactional: boolean }`)
-  - [ ] DTOs validate all fields appropriately
-
-- [ ] **Profile Update Endpoint**
-  - [ ] `PATCH /users/profile` endpoint exists
-  - [ ] Accepts and validates payload for displayName, avatarUrl, emailPreferences
-  - [ ] Uses DTOs and validation pipes
-
-- [ ] **Avatar Upload Handling**
-  - [ ] Supports avatar file upload (e.g., `POST /users/profile/avatar`)
-  - [ ] Accepts only image files, enforces size/type limits
-  - [ ] Stores avatars in `/uploads` or remote storage
-  - [ ] Returns accessible `avatarUrl` after upload
-
-- [ ] **Security & Data Integrity**
-  - [ ] Only authenticated users can update their own profile
-  - [ ] `updatedAt` field updates on profile change
-
-- [ ] **System-Wide Reflection**
-  - [ ] Profile changes are visible in user dashboard, leaderboards, notifications, etc.
-  - [ ] API/UI returns updated profile data immediately
-
-- [ ] **Email Preferences**
-  - [ ] Email preference toggles are respected by the mail/notification system
-
-- [ ] **Testing & Coverage**
-  - [ ] Unit tests for update logic and validation
-  - [ ] E2E tests for profile update and avatar upload
-  - [ ] ≥ 90% test coverage for profile management logic
+* [ ] Feature
+* [ ] Bug Fix
+* [ ] Refactor
+* [ ] Performance Improvement
+* [ ] Documentation Update
+* [ ] Test Improvement
+* [ ] CI/CD Update
+* [ ] Breaking Change
 
 ---
 
-## 📝 Description
-<!-- Describe your changes, implementation details, and any design decisions. -->
+## 🎯 Requirements Checklist
+
+### Implementation
+
+* [ ] Feature requirements have been fully implemented
+* [ ] Code follows project architecture and conventions
+* [ ] DTOs, entities, services, and controllers are updated where necessary
+* [ ] Input validation has been implemented
+* [ ] Proper error handling has been added
+* [ ] API responses follow established standards
+
+### Security
+
+* [ ] Authentication requirements are enforced
+* [ ] Authorization rules are properly implemented
+* [ ] Sensitive data is protected
+* [ ] No secrets, credentials, or environment-specific values are included
+
+### Database (If Applicable)
+
+* [ ] Database schema changes have been added
+* [ ] Migrations are included and tested
+* [ ] Existing data integrity is preserved
+
+### API Changes (If Applicable)
+
+* [ ] New endpoints are documented
+* [ ] Existing endpoints remain backward compatible
+* [ ] Request/response DTOs are updated
+* [ ] API documentation has been updated
+
+### Testing
+
+* [ ] Unit tests added or updated
+* [ ] Integration/E2E tests added or updated
+* [ ] Existing tests pass successfully
+* [ ] Test coverage remains acceptable
 
 ---
 
-## 🧪 How to Test
-- [ ] Update profile via `PATCH /users/profile`
-- [ ] Upload avatar via `POST /users/profile/avatar`
-- [ ] Check updated fields in API/UI
-- [ ] Verify email preferences are respected
-- [ ] Run all tests and check coverage
+## 📝 Detailed Changes
+
+<!-- Describe implementation details, architectural decisions, trade-offs, and any important context reviewers should know. -->
+
+### Added
+
+*
+
+### Updated
+
+*
+
+### Removed
+
+*
 
 ---
 
-## 📸 Screenshots (if applicable)
-<!-- Attach screenshots or screen recordings for UI changes. -->
+## 🧪 Testing Instructions
+
+### Steps to Verify
+
+1.
+2.
+3.
+
+### Expected Results
+
+<!-- Describe the expected outcome after testing. -->
 
 ---
 
-## 🔗 Related Issues/PRs
-<!-- Link to related issues, feature requests, or previous PRs. -->
+## 📸 Screenshots / Evidence (Optional)
+
+<!-- Include screenshots, API responses, logs, or recordings if applicable. -->
 
 ---
 
-## 🙏 Reviewer Notes
-- [ ] All acceptance criteria are met
-- [ ] Code is clean, documented, and follows conventions
-- [ ] No sensitive data or secrets are exposed 
+## 🔗 Related Issues
+
+Closes #
+
+Related to #
+
+---
+
+## ⚠️ Breaking Changes
+
+* [ ] No breaking changes
+* [ ] Contains breaking changes (describe below)
+
+### Details
+
+<!-- Explain any breaking changes and required migration steps. -->
+
+---
+
+## 📚 Documentation
+
+* [ ] Documentation updated
+* [ ] API documentation updated
+* [ ] No documentation changes required
+
+---
+

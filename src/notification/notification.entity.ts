@@ -5,7 +5,13 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-export type NotificationType = 'info' | 'reward' | 'challenge' | 'system' | 'game_event' | 'leaderboard';
+export type NotificationType =
+  | 'info'
+  | 'reward'
+  | 'challenge'
+  | 'system'
+  | 'game_event'
+  | 'leaderboard';
 
 @Entity('notifications')
 export class Notification {

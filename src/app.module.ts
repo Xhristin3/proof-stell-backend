@@ -33,10 +33,12 @@ import { ProtectedModule } from './protected/protected.module';
 
 @Module({
   imports: [
-    ThrottlerModule.forRoot({
-      ttl: 60, // Time window in seconds
-      limit: 10, // Max requests per window
-    }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60, // Time window in seconds
+        limit: 10, // Max requests per window
+      },
+    ]),
     ClsModule.forRoot({
       global: true,
       middleware: {
@@ -49,7 +51,10 @@ import { ProtectedModule } from './protected/protected.module';
     }),
     WinstonModule.forRootAsync({
       imports: [ClsModule],
-      useFactory: (clsService: ClsService) => createWinstonLogger(clsService),
+      useFactory: (clsService: ClsService) => {
+        const result = createWinstonLogger(clsService);
+        return result;
+      },
       inject: [ClsService],
     }),
     ConfigModule.forRoot({

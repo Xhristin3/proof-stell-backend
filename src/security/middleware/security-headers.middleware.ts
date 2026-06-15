@@ -7,7 +7,7 @@ export class SecurityHeadersMiddleware implements NestMiddleware {
     // Content Security Policy
     res.setHeader(
       'Content-Security-Policy',
-      "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+      "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;",
     );
 
     // X-Content-Type-Options
@@ -24,7 +24,10 @@ export class SecurityHeadersMiddleware implements NestMiddleware {
 
     // Strict Transport Security (HTTPS only)
     if (req.secure) {
-      res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+      res.setHeader(
+        'Strict-Transport-Security',
+        'max-age=31536000; includeSubDomains; preload',
+      );
     }
 
     // Hide server information

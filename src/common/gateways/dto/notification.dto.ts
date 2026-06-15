@@ -15,4 +15,4 @@ export class NotificationDto {
 
   @IsString()
   icon?: string;
-} 
+}

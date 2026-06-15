@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { TypedConfigService } from '../../common/config/typed-config.service';
@@ -15,18 +19,22 @@ export class HashingService {
     private readonly typedConfigService: TypedConfigService,
   ) {
     const configuredRounds = this.typedConfigService.bcryptSaltRounds || 12;
-    
+
     // Ensure salt rounds is within secure range
     if (configuredRounds < this.minSaltRounds) {
-      this.logger.warn(`Configured salt rounds (${configuredRounds}) is below minimum (${this.minSaltRounds}). Using minimum.`);
+      this.logger.warn(
+        `Configured salt rounds (${configuredRounds}) is below minimum (${this.minSaltRounds}). Using minimum.`,
+      );
       this.saltRounds = this.minSaltRounds;
     } else if (configuredRounds > this.maxSaltRounds) {
-      this.logger.warn(`Configured salt rounds (${configuredRounds}) is above maximum (${this.maxSaltRounds}). Using maximum.`);
+      this.logger.warn(
+        `Configured salt rounds (${configuredRounds}) is above maximum (${this.maxSaltRounds}). Using maximum.`,
+      );
       this.saltRounds = this.maxSaltRounds;
     } else {
       this.saltRounds = configuredRounds;
     }
-    
+
     this.logger.log(`Initialized with ${this.saltRounds} salt rounds`);
   }
 
@@ -38,7 +46,10 @@ export class HashingService {
     }
   }
 
-  async comparePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
+  async comparePassword(
+    plainPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
     try {
       return await bcrypt.compare(plainPassword, hashedPassword);
     } catch (error) {

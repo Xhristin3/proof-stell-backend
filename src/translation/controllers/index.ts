@@ -1,2 +1,2 @@
-export { TranslationController } from "./translation.controller"
-export { LanguageController } from "./language.controller"
+export { TranslationController } from './translation.controller';
+export { LanguageController } from './language.controller';

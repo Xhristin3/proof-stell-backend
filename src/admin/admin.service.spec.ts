@@ -45,7 +45,7 @@ describe('AdminService', () => {
 
       const result = await service.exportToCsv(' users ', 7);
 
-      expect(metricsService.getUsersForExport).toHaveBeenCalledWith(7);
+      expect(mockMetricsService.getUsersForExport).toHaveBeenCalledWith(7);
       expect(result).toEqual({
         filename: 'users_export_2026-06-13.csv',
         data: [
@@ -71,7 +71,7 @@ describe('AdminService', () => {
 
       const result = await service.exportToCsv('games', 7);
 
-      expect(metricsService.getGamesForExport).toHaveBeenCalledWith(7);
+      expect(mockMetricsService.getGamesForExport).toHaveBeenCalledWith(7);
       expect(result).toEqual({
         filename: 'games_export_2026-06-13.csv',
         data: [

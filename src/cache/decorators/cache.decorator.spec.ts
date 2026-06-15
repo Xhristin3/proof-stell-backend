@@ -86,7 +86,9 @@ describe('CacheKeys', () => {
 
   describe('predefined cache keys', () => {
     it('should have correct global leaderboard key template', () => {
-      expect(CacheKeys.GLOBAL_LEADERBOARD).toBe('leaderboard:global:page:{page}:limit:{limit}');
+      expect(CacheKeys.GLOBAL_LEADERBOARD).toBe(
+        'leaderboard:global:page:{page}:limit:{limit}',
+      );
     });
 
     it('should have correct user leaderboard key template', () => {
@@ -106,11 +108,15 @@ describe('CacheKeys', () => {
     });
 
     it('should have correct analytics top events key template', () => {
-      expect(CacheKeys.ANALYTICS_TOP_EVENTS).toBe('analytics:top-events:limit:{limit}:from:{from}:to:{to}');
+      expect(CacheKeys.ANALYTICS_TOP_EVENTS).toBe(
+        'analytics:top-events:limit:{limit}:from:{from}:to:{to}',
+      );
     });
 
     it('should have correct analytics dashboard key template', () => {
-      expect(CacheKeys.ANALYTICS_DASHBOARD).toBe('analytics:dashboard:days:{days}');
+      expect(CacheKeys.ANALYTICS_DASHBOARD).toBe(
+        'analytics:dashboard:days:{days}',
+      );
     });
 
     it('should have correct today challenge key template', () => {

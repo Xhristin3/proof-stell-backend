@@ -13,7 +13,11 @@ export class MailService {
     });
   }
 
-  async sendVerificationEmail(to: string, username: string, verificationUrl: string) {
+  async sendVerificationEmail(
+    to: string,
+    username: string,
+    verificationUrl: string,
+  ) {
     await this.mailerService.sendMail({
       to,
       subject: 'Verify your email address',

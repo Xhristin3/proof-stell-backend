@@ -1,1 +1,1 @@
-export { LanguageMiddleware } from "./language.middleware"
+export { LanguageMiddleware } from './language.middleware';

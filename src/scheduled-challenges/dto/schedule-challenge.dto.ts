@@ -1,25 +1,31 @@
-import { IsUUID, IsDateString, IsOptional, IsBoolean, IsObject } from "class-validator"
+import {
+  IsUUID,
+  IsDateString,
+  IsOptional,
+  IsBoolean,
+  IsObject,
+} from 'class-validator';
 
 export class ScheduleChallengeDto {
   @IsUUID()
-  challengeId: string
+  challengeId: string;
 
   @IsUUID()
   @IsOptional()
-  userId?: string
+  userId?: string;
 
   @IsDateString()
-  scheduledFor: string
+  scheduledFor: string;
 
   @IsDateString()
   @IsOptional()
-  expiresAt?: string
+  expiresAt?: string;
 
   @IsBoolean()
   @IsOptional()
-  isGlobal?: boolean
+  isGlobal?: boolean;
 
   @IsObject()
   @IsOptional()
-  metadata?: any
+  metadata?: any;
 }

@@ -36,7 +36,7 @@ export class NotificationService {
         notification.userId,
         notification.message,
         notification.type,
-        notification.icon
+        notification.icon,
       );
     }
     return saved;

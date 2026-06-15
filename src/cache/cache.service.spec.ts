@@ -95,7 +95,9 @@ describe('CacheService', () => {
 
       await service.set(key, value);
 
-      expect(mockCacheManager.set).toHaveBeenCalledWith(key, value, { ttl: undefined });
+      expect(mockCacheManager.set).toHaveBeenCalledWith(key, value, {
+        ttl: undefined,
+      });
     });
   });
 

@@ -58,7 +58,7 @@ export class AdminService {
     }
 
     const data = await this.getExportData(normalizedType, normalizedDays);
-    const rows = Array.isArray(data) ? data : [];
+    const rows = this.toRecordArray(Array.isArray(data) ? data : []);
 
     return {
       filename: `${normalizedType}_export_${new Date().toISOString().split('T')[0]}.csv`,
@@ -96,5 +96,14 @@ export class AdminService {
     );
 
     return [headers, ...rows].join('\n');
+  }
+
+  private toRecordArray(data: unknown[]): Record<string, unknown>[] {
+    return data.map((item) => {
+      if (typeof item === 'object' && item !== null) {
+        return item as Record<string, unknown>;
+      }
+      return {};
+    });
   }
 }

@@ -1,28 +1,28 @@
-import { IsArray, ValidateNested, IsString, IsOptional } from "class-validator"
-import { Type } from "class-transformer"
+import { IsArray, ValidateNested, IsString, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class BulkTranslationItem {
   @IsString()
-  key: string
+  key: string;
 
   @IsString()
-  value: string
-
-  @IsOptional()
-  @IsString()
-  namespace?: string
+  value: string;
 
   @IsOptional()
   @IsString()
-  description?: string
+  namespace?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
 }
 
 export class BulkTranslationDto {
   @IsString()
-  languageCode: string
+  languageCode: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => BulkTranslationItem)
-  translations: BulkTranslationItem[]
+  translations: BulkTranslationItem[];
 }

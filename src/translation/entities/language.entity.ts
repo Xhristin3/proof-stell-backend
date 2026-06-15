@@ -1,35 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm"
-import { Translation } from "./translation.entity"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
+import { Translation } from './translation.entity';
 
-@Entity("languages")
+@Entity('languages')
 export class Language {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column({ unique: true, length: 10 })
-  code: string // e.g., 'en', 'es', 'fr'
+  code: string; // e.g., 'en', 'es', 'fr'
 
   @Column({ length: 100 })
-  name: string // e.g., 'English', 'Spanish', 'French'
+  name: string; // e.g., 'English', 'Spanish', 'French'
 
   @Column({ length: 100 })
-  nativeName: string // e.g., 'English', 'Español', 'Français'
+  nativeName: string; // e.g., 'English', 'Español', 'Français'
 
   @Column({ default: true })
-  isActive: boolean
+  isActive: boolean;
 
   @Column({ default: false })
-  isDefault: boolean
+  isDefault: boolean;
 
-  @OneToMany(
-    () => Translation,
-    (translation) => translation.language,
-  )
-  translations: Translation[]
+  @OneToMany(() => Translation, (translation) => translation.language)
+  translations: Translation[];
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt: Date;
 }

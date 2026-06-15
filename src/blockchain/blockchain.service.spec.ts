@@ -55,7 +55,7 @@ describe('BlockchainService', () => {
     });
     expect(mockAnalyticsService.track).toHaveBeenCalledWith(
       AnalyticsEvent.TokenMinted,
-      { userId: '1', metadata: { transaction_hash: '0xhash' } }
+      { userId: '1', metadata: { transaction_hash: '0xhash' } },
     );
     expect(result).toEqual({ transaction_hash: '0xhash' });
   });
@@ -70,7 +70,10 @@ describe('BlockchainService', () => {
     });
     expect(mockAnalyticsService.track).toHaveBeenCalledWith(
       AnalyticsEvent.TokenTransferred,
-      { userId: '1', metadata: { toUserId: 2, amount: 50, transaction_hash: '0xhash2' } }
+      {
+        userId: '1',
+        metadata: { toUserId: 2, amount: 50, transaction_hash: '0xhash2' },
+      },
     );
     expect(result).toEqual({ transaction_hash: '0xhash2' });
   });
@@ -85,7 +88,7 @@ describe('BlockchainService', () => {
     });
     expect(mockAnalyticsService.track).toHaveBeenCalledWith(
       AnalyticsEvent.TokenBurned,
-      { userId: '1', metadata: { amount: 25, transaction_hash: '0xhash3' } }
+      { userId: '1', metadata: { amount: 25, transaction_hash: '0xhash3' } },
     );
     expect(result).toEqual({ transaction_hash: '0xhash3' });
   });

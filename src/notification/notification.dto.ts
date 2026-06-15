@@ -1,6 +1,19 @@
-import { IsString, IsEnum, IsArray, ArrayNotEmpty, MinLength, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsArray,
+  ArrayNotEmpty,
+  MinLength,
+  IsOptional,
+} from 'class-validator';
 
-export type NotificationType = 'info' | 'reward' | 'challenge' | 'system' | 'game_event' | 'leaderboard';
+export type NotificationType =
+  | 'info'
+  | 'reward'
+  | 'challenge'
+  | 'system'
+  | 'game_event'
+  | 'leaderboard';
 
 export class CreateNotificationDto {
   @IsArray()
@@ -15,9 +28,16 @@ export class CreateNotificationDto {
   @MinLength(2)
   message: string;
 
-  @IsEnum(['info', 'reward', 'challenge', 'system', 'game_event', 'leaderboard'])
+  @IsEnum([
+    'info',
+    'reward',
+    'challenge',
+    'system',
+    'game_event',
+    'leaderboard',
+  ])
   type: NotificationType;
-  
+
   @IsOptional()
   @IsString()
   icon?: string;

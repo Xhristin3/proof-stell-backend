@@ -6,9 +6,9 @@ export type SettingDocument = Setting & Document;
 @Schema()
 export class Setting {
   @Prop({ required: true, unique: true })
-  key: string; 
+  key: string;
 
-  @Prop({ type: Object, required: true }) 
+  @Prop({ type: Object, required: true })
   value: any;
 
   @Prop({ default: Date.now })
