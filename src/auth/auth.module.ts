@@ -8,7 +8,6 @@ import { UserModule } from 'src/users/users.module';
 import { AnalyticsModule } from 'src/analytics/analytics.module';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './providers/auth.service';
-import { HashingService } from './providers/hashing.service';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Module({
@@ -29,13 +28,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JwtStrategy,
-    HashingService,
-    RolesGuard,
-  ],
-  exports: [AuthService, HashingService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RolesGuard],
+  exports: [AuthService],
 })
 export class AuthModule {}

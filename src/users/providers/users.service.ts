@@ -12,12 +12,14 @@ import { ChangePasswordDto } from '../dto/change-password.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { plainToInstance } from 'class-transformer';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HashingService } from '../../auth/providers/hashing.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly hashingService: HashingService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<ReadUserDto> {
@@ -40,7 +42,13 @@ export class UserService {
       }
     }
 
-    const user = this.userRepository.create(createUserDto);
+    const hashedPassword = await this.hashingService.hashPassword(
+      createUserDto.password,
+    );
+    const user = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
     const savedUser = await this.userRepository.save(user);
 
     return plainToClass(ReadUserDto, savedUser, {
@@ -186,15 +194,18 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    const isCurrentPasswordValid = await user.validatePassword(
+    const isCurrentPasswordValid = await this.hashingService.comparePassword(
       changePasswordDto.currentPassword,
+      user.password,
     );
 
     if (!isCurrentPasswordValid) {
       throw new UnauthorizedException('Current password is incorrect');
     }
 
-    user.password = changePasswordDto.newPassword;
+    user.password = await this.hashingService.hashPassword(
+      changePasswordDto.newPassword,
+    );
     await this.userRepository.save(user);
   }
 
@@ -219,7 +230,10 @@ export class UserService {
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.findByEmail(email);
 
-    if (user && (await user.validatePassword(password))) {
+    if (
+      user &&
+      (await this.hashingService.comparePassword(password, user.password))
+    ) {
       return user;
     }
 
