@@ -53,12 +53,12 @@ describe('NotificationService', () => {
         icon: '🔔',
       };
       const created = [
-        { ...dto, userId: 'u1' },
-        { ...dto, userId: 'u2' },
+        { userId: 'u1', title: 'Test', message: 'Hello', type: 'info', icon: '🔔', isRead: false },
+        { userId: 'u2', title: 'Test', message: 'Hello', type: 'info', icon: '🔔', isRead: false },
       ];
-      (repo.create as any).mockImplementation(({ userId, ...rest }) => ({
-        userId,
-        ...rest,
+      (repo.create as any).mockImplementation((input: any) => ({
+        ...input,
+        isRead: false,
       }));
       (repo.save as any).mockResolvedValue(created);
       const result = await service.create(dto as any);

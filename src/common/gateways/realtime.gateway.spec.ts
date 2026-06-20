@@ -2,7 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RealtimeGateway } from './realtime.gateway';
 import { WsJwtGuard } from './guards/ws-jwt.guard';
 import { JwtService } from '@nestjs/jwt';
-import { Logger } from '@nestjs/common';
+import { LoggingService } from '../../logging/logging.service';
+import { AuthTokenService } from '../../auth/providers/auth-token.service';
 
 // Mock Socket.IO Server and Socket
 class MockSocket {
@@ -31,8 +32,30 @@ describe('RealtimeGateway', () => {
   let client: any;
 
   beforeEach(async () => {
+    const mockLoggingService = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+      logUserAction: jest.fn(),
+      logSecurityEvent: jest.fn(),
+      logDatabaseOperation: jest.fn(),
+      logBusinessEvent: jest.fn(),
+      logPerformanceMetric: jest.fn(),
+    };
+
+    const mockAuthTokenService = {
+      verifyAccessToken: jest.fn().mockResolvedValue({ sub: 'user1', role: 'admin' }),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RealtimeGateway, WsJwtGuard, JwtService, Logger],
+      providers: [
+        RealtimeGateway,
+        WsJwtGuard,
+        JwtService,
+        { provide: LoggingService, useValue: mockLoggingService },
+        { provide: AuthTokenService, useValue: mockAuthTokenService },
+      ],
     }).compile();
     gateway = module.get<RealtimeGateway>(RealtimeGateway);
     gateway.server = new MockServer() as any;
@@ -85,14 +108,14 @@ describe('RealtimeGateway', () => {
   });
 
   it('should emit notification for admin', async () => {
-    const payload = { userId: 'user2', message: 'msg', type: 'info' };
+    const payload = { userId: 'user2', message: 'msg', type: 'info', title: 'Test', icon: '🔔' };
     const res = await gateway.handleSendNotification(client, payload);
     expect(res.status).toBe('sent');
   });
 
   it('should reject notification for non-admin', async () => {
     client.user.role = 'user';
-    const payload = { userId: 'user2', message: 'msg', type: 'info' };
+    const payload = { userId: 'user2', message: 'msg', type: 'info', title: 'Test', icon: '🔔' };
     const res = await gateway.handleSendNotification(client, payload);
     expect(res.error).toBe('Unauthorized');
   });

@@ -3,7 +3,7 @@ import { SessionIntegrityService } from '../session-integrity.service';
 import type {
   GameSession,
   SessionValidationRules,
-} from '../../interfaces/game-session.interface';
+} from '../../game-session.interface';
 
 describe('SessionIntegrityService', () => {
   let service: SessionIntegrityService;

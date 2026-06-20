@@ -9,6 +9,7 @@ const mockLeaderboardService = {
   submitScore: jest.fn(),
   resetLeaderboard: jest.fn(),
 };
+
 describe('LeaderboardController', () => {
   let controller: LeaderboardController;
 
@@ -24,7 +25,6 @@ describe('LeaderboardController', () => {
     }).compile();
 
     controller = module.get<LeaderboardController>(LeaderboardController);
-    // service = module.get<LeaderboardService>(LeaderboardService);
   });
 
   it('should be defined', () => {

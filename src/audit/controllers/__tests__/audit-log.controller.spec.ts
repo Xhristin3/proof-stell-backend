@@ -1,6 +1,6 @@
 import { Test, type TestingModule } from '@nestjs/testing';
 import { AuditLogController } from '../audit-log.controller';
-import { AuditLogService } from '../../../common/services/audit-log.service';
+import { AuditLogService } from '../audit-log.service';
 import type { GetAuditLogsDto } from '../../../common/dto/audit-log.dto';
 import { jest } from '@jest/globals';
 
