@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { AuthService } from '../providers/auth.service';
+import { AuthController } from '../../auth/controllers/auth.controller';
+import { AuthService } from '../../auth/providers/auth.service';
 import { BadRequestException } from '@nestjs/common';
 
 describe('AuthController - Email Verification Flow Tests', () => {

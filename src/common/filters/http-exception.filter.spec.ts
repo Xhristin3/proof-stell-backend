@@ -1,24 +1,27 @@
 /* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpExceptionFilter } from './http-exception.filter';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { LoggingService } from '../../logging/logging.service';
 import { HttpException, HttpStatus, ArgumentsHost } from '@nestjs/common';
 
 describe('HttpExceptionFilter', () => {
   let filter: HttpExceptionFilter;
-  let mockLogger: any;
+  let mockLoggingService: any;
 
   beforeEach(async () => {
-    mockLogger = {
+    mockLoggingService = {
+      info: jest.fn(),
       error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         HttpExceptionFilter,
         {
-          provide: WINSTON_MODULE_PROVIDER,
-          useValue: mockLogger,
+          provide: LoggingService,
+          useValue: mockLoggingService,
         },
       ],
     }).compile();
@@ -54,19 +57,13 @@ describe('HttpExceptionFilter', () => {
 
     filter.catch(exception, mockHost);
 
-    expect(mockLogger.error).toHaveBeenCalledWith(
+    expect(mockLoggingService.error).toHaveBeenCalledWith(
       'HTTP Exception: GET /test',
-      {
-        status: 400,
-        message: 'Test error',
-        stack: expect.any(String),
-        request: {
-          method: 'GET',
-          url: '/test',
-          body: { test: 'data' },
-          headers: { 'content-type': 'application/json' },
-        },
-      },
+      expect.any(Error),
+      expect.objectContaining({
+        method: 'GET',
+        statusCode: 400,
+      }),
     );
 
     expect(mockResponse.status).toHaveBeenCalledWith(400);
@@ -102,19 +99,13 @@ describe('HttpExceptionFilter', () => {
 
     filter.catch(exception, mockHost);
 
-    expect(mockLogger.error).toHaveBeenCalledWith(
+    expect(mockLoggingService.error).toHaveBeenCalledWith(
       'HTTP Exception: POST /api/test',
-      {
-        status: 500,
-        message: 'Internal server error',
-        stack: expect.any(String),
-        request: {
-          method: 'POST',
-          url: '/api/test',
-          body: {},
-          headers: {},
-        },
-      },
+      expect.any(Error),
+      expect.objectContaining({
+        method: 'POST',
+        statusCode: 500,
+      }),
     );
 
     expect(mockResponse.status).toHaveBeenCalledWith(500);

@@ -4,6 +4,8 @@ import { LeaderboardService } from './Leaderboard.service';
 import { Leaderboard } from './entities/leaderboard.entity';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { RealtimeGateway } from '../common/gateways/realtime.gateway';
+import { TypedConfigService } from '../common/config/typed-config.service';
+import { NotificationService } from '../notification/notification.service';
 
 const mockRepository = {
   findOne: jest.fn(),
@@ -12,6 +14,14 @@ const mockRepository = {
   create: jest.fn(),
   save: jest.fn(),
   clear: jest.fn(),
+};
+
+const mockConfigService = {
+  leaderboardRecalculationStrategy: 'batch',
+};
+
+const mockNotificationService = {
+  create: jest.fn(),
 };
 
 describe('LeaderboardService', () => {
@@ -27,8 +37,16 @@ describe('LeaderboardService', () => {
           useValue: mockRepository,
         },
         {
+          provide: TypedConfigService,
+          useValue: mockConfigService,
+        },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
+        },
+        {
           provide: RealtimeGateway,
-          useValue: { emitLeaderboardUpdate: jest.fn() },
+          useValue: { emitLeaderboardUpdate: jest.fn(), emitUserRankChange: jest.fn(), emitLeaderboardStats: jest.fn() },
         },
       ],
     }).compile();
@@ -52,6 +70,8 @@ describe('LeaderboardService', () => {
       mockRepository.save.mockResolvedValue(mockEntry);
       mockRepository.find.mockResolvedValue([mockEntry]);
       mockRepository.findOne.mockResolvedValueOnce(mockEntry);
+      mockRepository.findAndCount.mockResolvedValue([[mockEntry], 1]);
+      mockConfigService.leaderboardRecalculationStrategy = 'batch';
 
       const result = await service.submitScore(userId, createDto);
       expect(result).toEqual(mockEntry);
@@ -81,10 +101,10 @@ describe('LeaderboardService', () => {
     });
   });
 
-  it('should emit leaderboard update', async () => {
-    await service.updateLeaderboard('test', [{ user: 'a', score: 1 }]);
-    expect(gateway.emitLeaderboardUpdate).toHaveBeenCalledWith('test', [
-      { user: 'a', score: 1 },
-    ]);
+  it('should reset leaderboard', async () => {
+    mockRepository.findAndCount.mockResolvedValue([[], 0]);
+    await service.resetLeaderboard();
+    expect(mockRepository.clear).toHaveBeenCalled();
+    expect(gateway.emitLeaderboardUpdate).toHaveBeenCalled();
   });
 });
